@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <modules>
+        <module>rjsoft-service</module>
+        <module>rjsoft-core</module>
+        <module>rjsoft-dao</module>
+        <module>rjsoft-web</module>
+        <module>rjsoft-common</module>
+    </modules>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.10.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.rongji</groupId>
+    <artifactId>rjsoft</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0-RELEASE</version>
+    <name>rjsoft</name>
+    <description>原型</description>
+
+    <properties>
+        <rjsoft.version>1.0.0-RELEASE</rjsoft.version>
+        <java.version>1.8</java.version>
+        <druid.version>1.1.21</druid.version>
+        <guava.version>30.1-jre</guava.version>
+        <fastjson.version>1.2.75</fastjson.version>
+        <mysql.driver.version>8.0.16</mysql.driver.version>
+        <commons-lang3.version>3.7</commons-lang3.version>
+        <commons-collections4.version>4.4</commons-collections4.version>
+        <commons-io.version>2.8.0</commons-io.version>
+        <mybatis-plus.version>3.3.1</mybatis-plus.version>
+        <lombok.version>1.18.12</lombok.version>
+        <swagger.version>2.9.2</swagger.version>
+        <knife4j.version>2.0.8</knife4j.version>
+        <mybatis-plus.version>3.3.1</mybatis-plus.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <logback.version>1.2.3</logback.version>
+        <swagger.version>1.5.22</swagger.version>
+        <jwt.version>0.9.1</jwt.version>
+        <jackson.version>2.10.5.1</jackson.version>
+        <tomcat-embed-core.version>9.0.45</tomcat-embed-core.version>
+        <hutool.version>5.6.3</hutool.version>
+        <hibernate-validator.version>6.2.0.Final</hibernate-validator.version>
+        <kaptcha.version>2.3.2</kaptcha.version>
+    </properties>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.rongji</groupId>
+                <artifactId>rjsoft-core</artifactId>
+                <version>${rjsoft.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.rongji</groupId>
+                <artifactId>rjsoft-service</artifactId>
+                <version>${rjsoft.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.rongji</groupId>
+                <artifactId>rjsoft-dao</artifactId>
+                <version>${rjsoft.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.rongji</groupId>
+                <artifactId>rjsoft-web</artifactId>
+                <version>${rjsoft.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.rongji</groupId>
+                <artifactId>rjsoft-common</artifactId>
+                <version>${rjsoft.version}</version>
+            </dependency>
+
+            <!-- guava -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <!-- jackson -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <!-- alibaba fastjson -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <!-- mysql jdbc driver -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.driver.version}</version>
+            </dependency>
+
+            <!-- alibaba datasource -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+            <!-- apache common -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-collections4</artifactId>
+                <version>${commons-collections4.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+
+
+            <!-- 日志slf4j -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <!-- logback -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <!-- lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+            <!--  knife4j  -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+
+            <!--  swagger  -->
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+
+            <!--  mybatis-plus  -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-generator</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <!--jwt-->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>${tomcat-embed-core.version}</version>
+            </dependency>
+
+            <!--  hutool  -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate-validator.version}</version>
+            </dependency>
+
+            <!--验证码 -->
+            <dependency>
+                <groupId>com.github.penggle</groupId>
+                <artifactId>kaptcha</artifactId>
+                <version>${kaptcha.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+</project>

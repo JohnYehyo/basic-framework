@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rongji.rjsoft.mapper.CmsColumnMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.rongji.rjsoft.entity.content.CmsColumn">
+        <id column="column_id" property="columnId"/>
+        <result column="column_name" property="columnName"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="ancestors" property="ancestors"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="getPage" resultType="com.rongji.rjsoft.vo.content.CmsColumnVo">
+        select column_id, column_name, parent_id
+        from cms_column
+        <where>
+            <if test="param.columnId != null">
+                column_id = #{param.columnId}
+            </if>
+            <if test="param.columnName != null and param.columnName != ''">
+                and column_name like concat ('%', #{param.columnName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectChildrenByColumnId" resultMap="BaseResultMap">
+        select column_Id, parent_id, ancestors
+        from cms_column
+        where find_in_set(#{columnId}, ancestors)
+    </select>
+
+    <update id="batchUpdateChildreAncestors">
+        update cms_column set ancestors =
+        <foreach collection="list" item="item" index="index" separator=" " open="case column_id" close="end">
+            when #{item.columnId} then #{item.ancestors}
+        </foreach>
+        where column_id in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.columnId}
+        </foreach>
+    </update>
+
+</mapper>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rongji.rjsoft.mapper.SysUserPostMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.rongji.rjsoft.entity.system.SysUserPost">
+        <id column="user_id" property="userId"/>
+        <result column="post_id" property="postId"/>
+    </resultMap>
+
+    <insert id="batchUserPost">
+        insert into sys_user_post (user_id, post_id) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            (#{item.userId}, #{item.postId})
+        </foreach>
+    </insert>
+
+    <select id="getPostsByUserId" parameterType="long" resultType="integer">
+        select post_id
+        from sys_user_post
+        where user_id = #{userId}
+    </select>
+
+</mapper>

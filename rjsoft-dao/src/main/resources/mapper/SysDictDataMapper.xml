@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rongji.rjsoft.mapper.SysDictDataMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.rongji.rjsoft.entity.system.SysDictData">
+        <id column="dict_code" property="dictCode"/>
+        <result column="dict_sort" property="dictSort"/>
+        <result column="dict_label" property="dictLabel"/>
+        <result column="dict_value" property="dictValue"/>
+        <result column="dict_type" property="dictType"/>
+        <result column="status" property="status"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <select id="getPages" resultType="com.rongji.rjsoft.vo.system.dict.SysDictDataVo">
+        select dict_code,
+        dict_sort,
+        dict_label,
+        dict_value,
+        dict_type,
+        status,
+        create_time,
+        remark
+        from sys_dict_data
+        <where>
+            <if test="param.dictLabel != null and param.dictLabel != ''">
+                dict_label = #{param.dictLabel}
+            </if>
+            <if test="param.dictType != null and param.dictType != ''">
+                and dict_type = #{param.dictType}
+            </if>
+            <if test="param.status != null">
+                and status = #{param.status}
+            </if>
+        </where>
+    </select>
+
+    <select id="listOfDict" resultType="com.rongji.rjsoft.vo.system.dict.DictDataVo">
+        select dict_code, dict_label, dict_value, dict_type from sys_dict_data
+    </select>
+
+</mapper>

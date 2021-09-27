@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rongji.rjsoft.mapper.CmsCategoryMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.rongji.rjsoft.entity.content.CmsCategory">
+        <id column="category_id" property="categoryId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="ancestors" property="ancestors"/>
+        <result column="category_name" property="categoryName"/>
+        <result column="description" property="description"/>
+        <result column="order_num" property="orderNum"/>
+        <result column="icon" property="icon"/>
+        <result column="status" property="status"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <update id="updateStatus">
+        update cms_category set status = 1 where category_id in
+        <foreach collection="array" open="(" separator="," close=")" index="index" item="item">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="getPages" resultType="com.rongji.rjsoft.vo.content.CmsCategoryVo">
+        select category_id, parent_id, category_name, description, order_num, icon, status
+        from cms_category
+        <where>
+            <if test="param.categoryId != null">
+                category_id = #{param.categoryId}
+            </if>
+            <if test="param.categoryName != null and param.categoryName != ''">
+                and category_name like concat ('%', #{param.categoryName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="selectChildrenByCategoryId" resultMap="BaseResultMap">
+        select category_id, parent_id, ancestors
+        from cms_category
+        where find_in_set(#{categoryId}, ancestors)
+    </select>
+
+    <update id="batchUpdateChildreAncestors">
+        update cms_category set ancestors =
+        <foreach collection="list" item="item" index="index" separator=" " open="case category_id" close="end">
+            when #{item.categoryId} then #{item.ancestors}
+        </foreach>
+        where category_id in
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.categoryId}
+        </foreach>
+    </update>
+
+</mapper>

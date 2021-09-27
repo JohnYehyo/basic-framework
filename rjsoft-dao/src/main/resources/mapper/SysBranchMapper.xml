@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rongji.rjsoft.mapper.SysBranchMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.rongji.rjsoft.entity.system.SysBranch">
+        <id column="id" property="id"/>
+        <result column="branch_code" property="branchCode"/>
+        <result column="branch_name" property="branchName"/>
+        <result column="parent_code" property="parentCode"/>
+        <result column="level" property="level"/>
+        <result column="status" property="status"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="getSimpleAsynchTreeByCode" parameterType="string" resultType="com.rongji.rjsoft.vo.system.branch.BranchTreeVo">
+        select branch_code, branch_name, parent_code
+        from sys_branch
+        where branch_code = #{branchCode}
+          and status = 0
+    </select>
+
+    <select id="getAsynchTreeByCode" parameterType="string" resultType="com.rongji.rjsoft.vo.system.branch.BranchTreeVo">
+        select branch_code, branch_name, parent_code
+        from sys_branch
+        where parent_code = #{branchCode}
+          and status = 0
+        order by branch_code
+    </select>
+
+</mapper>

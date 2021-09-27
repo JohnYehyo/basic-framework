@@ -1,0 +1,10 @@
+${AnsiColor.BRIGHT_GREEN}
+       __      __      __  __     __
+      / /___  / /_  ___\ \/ /__  / /_  __  ______
+ __  / / __ \/ __ \/ __ \  / _ \/ __ \/ / / / __ \
+/ /_/ / /_/ / / / / / / / /  __/ / / / /_/ / /_/ /
+\____/\____/_/ /_/_/ /_/_/\___/_/ /_/\__, /\____/
+                                    /____/
+${AnsiColor.BRIGHT_CYAN}
+Application Version: ${JohnYehyo.version}
+Spring Boot Version: ${spring-boot.version}

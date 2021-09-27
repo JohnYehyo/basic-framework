@@ -1,0 +1,46 @@
+server:
+  port: 8088
+  tomcat:
+    max-connections: 500
+    threads:
+      max: 1000
+    #最大等待数
+    accept-count: 200
+  servlet:
+    context-path: /base
+
+spring:
+  application:
+    name: rjsoft
+  profiles:
+    active: other
+  #jackson配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: ALWAYS
+  #上传配置
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 100MB
+
+#mybatis-plus配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# token配置
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30分钟）
+  expireTime: 30
+
+JohnYehyo:
+  version: 1.0.0
+  # 验证码类型 math 数组计算 char 字符验证
+  captchaType: math

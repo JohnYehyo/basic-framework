@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rongji.rjsoft.mapper.SysOperationLogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.rongji.rjsoft.entity.monitor.SysOperationLog">
+        <id column="id" property="id"/>
+        <result column="module" property="module"/>
+        <result column="business_type" property="businessType"/>
+        <result column="method" property="method"/>
+        <result column="request_method" property="requestMethod"/>
+        <result column="operator_type" property="operatorType"/>
+        <result column="user_name" property="userName"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="dept_name" property="deptName"/>
+        <result column="branch_code" property="branchCode"/>
+        <result column="ip" property="ip"/>
+        <result column="param" property="param"/>
+        <result column="result" property="result"/>
+        <result column="status" property="status"/>
+        <result column="time" property="time"/>
+        <result column="error_msg" property="errorMsg"/>
+        <result column="method_target" property="methodTarget"/>
+    </resultMap>
+
+    <select id="getPages" resultType="com.rongji.rjsoft.vo.monitor.log.OperatorLogVo">
+        select id, module, method, business_type, operator_type, user_name, dept_name, ip, status, time
+        from sys_operation_log
+        <where>
+            <if test="null != param.deptId and param.DeptId != ''">
+                deptId = #{param.deptId}
+            </if>
+            <if test="null != param.branchCode and param.branchCode != ''">
+                and branch_code like concat (#{param.branchCode}, '%')
+            </if>
+            <if test="null != param.keyWord and param.keyWord != ''">
+                and (module like concat ('%', #{param.keyWord}, '%') or method like concat ('%', #{param.keyWord}, '%'))
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rongji.rjsoft.mapper.SysPostMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.rongji.rjsoft.entity.system.SysPost">
+        <id column="post_id" property="postId"/>
+        <result column="post_code" property="postCode"/>
+        <result column="post_name" property="postName"/>
+        <result column="post_sort" property="postSort"/>
+        <result column="status" property="status"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <sql id="selectPostVo">
+        select post_id, post_name, post_sort, status, create_time, remark
+        from sys_post
+    </sql>
+
+
+    <select id="pagesOfPost" resultType="com.rongji.rjsoft.vo.system.post.SysPostVo">
+       <include refid="selectPostVo"/>
+        <where>
+            <if test="params.postName != null and params.postName != ''">
+                post_name like concat(#{params.postName}, '%')
+            </if>
+            <if test="params.status != null">
+                and status = #{params.status}
+            </if>
+        </where>
+    </select>
+
+    <select id="listOfPost" parameterType="com.rongji.rjsoft.query.system.post.PostSelectQuery" resultType="com.rongji.rjsoft.vo.system.post.SysPostSelectVo">
+        select post_id, post_name
+        from sys_post
+        <where>
+            <if test="postName != null and postName != ''">
+                post_name like concat(#{postName}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

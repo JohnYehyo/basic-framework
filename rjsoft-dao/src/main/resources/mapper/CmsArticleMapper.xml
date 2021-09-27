@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rongji.rjsoft.mapper.CmsArticleMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.rongji.rjsoft.entity.content.CmsArticle">
+        <id column="article_id" property="articleId"/>
+        <result column="article_title" property="articleTitle"/>
+        <result column="author_id" property="authorId"/>
+        <result column="author_name" property="authorName"/>
+        <result column="cover_image" property="coverImage"/>
+        <result column="qrcode_path" property="qrcodePath"/>
+        <result column="file_url" property="fileUrl"/>
+        <result column="top" property="top"/>
+        <result column="category_id" property="categoryId"/>
+        <result column="slider" property="slider"/>
+        <result column="slider_img" property="sliderImg"/>
+        <result column="original" property="original"/>
+        <result column="description" property="description"/>
+        <result column="keywords" property="keywords"/>
+        <result column="order_num" property="orderNum"/>
+        <result column="state" property="state"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <update id="audit" parameterType="com.rongji.rjsoft.dto.content.CmsArticleStateDto">
+        update cms_article set state = #{state} where article_id in
+        <foreach collection="articleIds" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="getPage" resultType="com.rongji.rjsoft.vo.content.CmsArticleVo">
+        SELECT
+        t1.article_id,
+        t1.article_title,
+        t1.author_name,
+        t1.cover_image,
+        t2.category_name as categoryName,
+        t1.top,
+        t1.slider
+        FROM
+        cms_article AS t1
+        INNER JOIN cms_category AS t2 ON t1.category_id = t2.category_id
+        <where>
+            <if test="null != param.state">
+                t1.state = #{param.state}
+            </if>
+            <if test="null != param.articleTitle and param.articleTitle != ''">
+                and t1.article_title like concat('%', #{articleTitle}, '%')
+            </if>
+            <if test="null != param.keywords and param.keywords != ''">
+                and t1.keywords like concat('%', #{param.keywords}, '%')
+            </if>
+        </where>
+        order by t1.order_num, t1.article_id
+    </select>
+
+    <select id="getInfo" parameterType="long" resultType="com.rongji.rjsoft.vo.content.CmsArticleInfoVo">
+        SELECT t1.article_id,
+               t1.article_title,
+               t1.author_name,
+               t1.cover_image,
+               t2.category_name as categoryName,
+               t1.top,
+               t1.slider,
+               t1.qrcode_path,
+               t1.file_url,
+               t1.slider_img,
+               t1.description,
+               t3.content
+        FROM cms_article AS t1
+                 INNER JOIN cms_category AS t2 ON t1.category_id = t2.category_id
+                 INNER JOIN cms_article_content AS t3 ON t1.article_id = t3.article_id
+        where t1.article_id = #{articleId}
+    </select>
+</mapper>

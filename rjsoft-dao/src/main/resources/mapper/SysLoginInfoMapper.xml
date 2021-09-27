@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rongji.rjsoft.mapper.SysLoginInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.rongji.rjsoft.entity.monitor.SysLoginInfo">
+        <id column="id" property="id"/>
+        <result column="user_name" property="userName"/>
+        <result column="ip" property="ip"/>
+        <result column="browser" property="browser"/>
+        <result column="os" property="os"/>
+        <result column="status" property="status"/>
+        <result column="msg" property="msg"/>
+        <result column="login_time" property="loginTime"/>
+    </resultMap>
+
+    <select id="getPages" resultType="com.rongji.rjsoft.vo.monitor.login.LoginInfoVo">
+        select user_name, ip, browser, os, status, msg, login_time from sys_login_info
+        <where>
+            <if test="null!= param.userName and param.userName != ''">
+                user_name like concat ('%', #{param.userName}, '%')
+            </if>
+            <choose>
+                <when test="null != param.beginTime and null != param.endTime">
+                    AND login_time between #{param.beginTime} and #{param.endTime}
+                </when>
+                <when test="null != param.beginTime">
+                    AND login_time &gt;= #{param.beginTime}
+                </when>
+                <when test="null != param.endTime">
+                    AND login_time &lt;= #{param.endTime}
+                </when>
+                <otherwise></otherwise>
+            </choose>
+        </where>
+    </select>
+
+</mapper>

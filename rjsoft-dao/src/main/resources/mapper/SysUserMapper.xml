@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rongji.rjsoft.mapper.SysUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.rongji.rjsoft.entity.system.SysUser">
+        <id column="user_id" property="userId"/>
+        <result column="dept_id" property="deptId"/>
+        <result column="user_name" property="userName"/>
+        <result column="nick_name" property="nickName"/>
+        <result column="user_type" property="userType"/>
+        <result column="id_card" property="idCard"/>
+        <result column="email" property="email"/>
+        <result column="phonenumber" property="phonenumber"/>
+        <result column="gender" property="gender"/>
+        <result column="avatar" property="avatar"/>
+        <result column="password" property="password"/>
+        <result column="status" property="status"/>
+        <result column="del_flag" property="delFlag"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <select id="listOfUser" resultType="com.rongji.rjsoft.vo.system.user.SysUserVo">
+        select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.password, u.gender,
+        u.status, u.del_flag, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from
+        sys_user u
+        left join sys_dept d on u.dept_id = d.dept_id
+        where u.del_flag = 0
+        <choose>
+            <when test="null != params.beginTime and null != params.endTime">
+                AND u.create_time between #{params.beginTime} and #{params.endTime}
+            </when>
+            <when test="null != params.beginTime">
+                AND u.create_time &gt;= #{params.beginTime}
+            </when>
+            <when test="null != params.endTime">
+                AND u.create_time &lt;= #{params.endTime}
+            </when>
+            <otherwise></otherwise>
+        </choose>
+        <if test="params.status != null and params.status != ''">
+            AND u.status = #{params.status}
+        </if>
+        <if test="params.userName != null and params.userName != ''">
+            AND u.user_name like concat('%', #{params.userName}, '%')
+        </if>
+        <if test="params.nickName != null and params.nickName != ''">
+            AND u.nick_name like concat('%', #{params.nickName}, '%')
+        </if>
+        <if test="params.email != null and params.email != ''">
+            AND u.email like concat('%', #{params.email}, '%')
+        </if>
+        <if test="params.phonenumber != null and params.phonenumber != ''">
+            AND u.phonenumber like concat('%', #{params.phonenumber}, '%')
+        </if>
+        <if test="params.deptIds != null">
+            AND u.dept_id in
+            <foreach collection="params.deptIds" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="checkUserByUserName" resultType="Integer">
+        select count(*)
+        from sys_user
+        where user_name = #{userName} limit 1
+    </select>
+
+    <select id="checkUserByPhone" resultMap="BaseResultMap">
+        select user_id, phonenumber
+        from sys_user
+        where phonenumber = #{phonenumber} limit 1
+    </select>
+
+    <select id="checkUserByEmail" resultMap="BaseResultMap">
+        select user_id, email
+        from sys_user
+        where email = #{email} limit 1
+    </select>
+
+    <update id="batchUpdateDeleteMarks" parameterType="Long">
+        update sys_user set del_flag = 2 where user_id in
+        <foreach collection="list" item="userId" index="index" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </update>
+
+    <insert id="saveUser" parameterType="com.rongji.rjsoft.entity.system.SysUser" useGeneratedKeys="true"
+            keyProperty="userId">
+        insert into sys_user(
+        <if test="userId != null and userId != 0">user_id,</if>
+        <if test="deptId != null and deptId != 0">dept_id,</if>
+        <if test="userName != null and userName != ''">user_name,</if>
+        <if test="nickName != null and nickName != ''">nick_name,</if>
+        <if test="email != null and email != ''">email,</if>
+        <if test="avatar != null and avatar != ''">avatar,</if>
+        <if test="phonenumber != null and phonenumber != ''">phonenumber,</if>
+        <if test="gender != null and gender != ''">gender,</if>
+        <if test="password != null and password != ''">password,</if>
+        <if test="status != null and status != ''">status,</if>
+        <if test="createBy != null and createBy != ''">create_by,</if>
+        <if test="remark != null and remark != ''">remark,</if>
+        create_time
+        )values(
+        <if test="userId != null and userId != ''">#{userId},</if>
+        <if test="deptId != null and deptId != ''">#{deptId},</if>
+        <if test="userName != null and userName != ''">#{userName},</if>
+        <if test="nickName != null and nickName != ''">#{nickName},</if>
+        <if test="email != null and email != ''">#{email},</if>
+        <if test="avatar != null and avatar != ''">#{avatar},</if>
+        <if test="phonenumber != null and phonenumber != ''">#{phonenumber},</if>
+        <if test="gender != null and gender != ''">#{gender},</if>
+        <if test="password != null and password != ''">#{password},</if>
+        <if test="status != null and status != ''">#{status},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        <if test="remark != null and remark != ''">#{remark},</if>
+        #{createTime}
+        )
+    </insert>
+
+    <update id="updateUserById" parameterType="com.rongji.rjsoft.entity.system.SysUser">
+        update sys_user
+        <set>
+            <if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
+            <if test="email != null ">email = #{email},</if>
+            <if test="phonenumber != null ">phonenumber = #{phonenumber},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="avatar != null and avatar != ''">avatar = #{avatar},</if>
+            update_by = #{updateBy},
+            update_time = #{updateTime}
+        </set>
+        where user_id = #{userId}
+    </update>
+
+    <update id="updatePassword" parameterType="com.rongji.rjsoft.entity.system.SysUser">
+        update sys_user
+        <set>
+            password = #{password},
+            update_by = #{updateBy},
+            update_time = #{updateTime}
+        </set>
+        where user_id = #{userId}
+    </update>
+
+</mapper>

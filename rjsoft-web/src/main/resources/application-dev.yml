@@ -1,0 +1,36 @@
+spring:
+  #数据库连接
+  datasource:
+    url: jdbc:mysql://192.168.5.233:3306/rjcloud_cms_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+  #redis
+  redis:
+    host: 192.168.5.233
+    password: 123456
+    port: 6379
+    timeout: 5000
+    lettuce:
+      pool:
+        max-active: 200
+        max-wait: -1
+        max-idle: 20
+        min-idle: 0
+#文件存储路径
+file:
+  path: D:\other\file
+    avator: /avator
+    download: /download
+    upload: /upload
+  # 文件大小 /M
+  maxSize: 100
+  avatarMaxSize: 5
+  localUrl: http://127.0.0.1:8088
+# swagger开关
+swagger:
+  enable: true
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.rongji.rjsoft.mapper.CmsTagsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.rongji.rjsoft.entity.content.CmsTags">
+        <id column="tag_id" property="tagId"/>
+        <result column="tag_name" property="tagName"/>
+        <result column="description" property="description"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="getPage" resultType="com.rongji.rjsoft.vo.content.CmsTagsVo">
+        select tag_id, tag_name, description
+        from cms_tags
+        <where>
+            <if test="null != param.tagName and param.tagName != ''">
+                tag_name like concat('%', #{param.tagName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getList" parameterType="com.rongji.rjsoft.query.content.CmsTagsSimpleQuery" resultType="com.rongji.rjsoft.vo.content.CmsTagsSimpleVo">
+        select tag_id, tag_name
+        from cms_tags
+        <where>
+            <if test="null != tagName and tagName != ''">
+                tag_name like concat('%', #{tagName}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>
