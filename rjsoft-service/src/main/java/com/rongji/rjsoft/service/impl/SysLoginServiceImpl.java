@@ -54,20 +54,20 @@ public class SysLoginServiceImpl implements ISysLoginService {
      */
     @Override
     public String login(LoginAo loginAo) {
-//        String verifyKey = Constants.CAPTCHA_CODE_KEY + loginAo.getAppId();
-//        String captcha = redisCache.getCacheObject(verifyKey);
-//        redisCache.deleteObject(verifyKey);
-//
-//        if (null == captcha) {
-//            sysLoginInfoService.saveLoginInfo(loginAo.getUserName(), LogStatusEnum.FAIL.getCode(), ResponseEnum.CAPTCHA_EXPIRED.getValue());
-//            throw new BusinessException(ResponseEnum.CAPTCHA_EXPIRED);
-//        }
-//
-//        if (captcha.equalsIgnoreCase(loginAo.getCaptcha())) {
-//            LogUtils.warn("用户：{}验证码输入错误", loginAo.getUserName());
-//            sysLoginInfoService.saveLoginInfo(loginAo.getUserName(), LogStatusEnum.FAIL.getCode(), ResponseEnum.CAPTCHA_ERROR.getValue());
-//            throw new BusinessException(ResponseEnum.CAPTCHA_ERROR);
-//        }
+        String verifyKey = Constants.CAPTCHA_CODE_KEY + loginAo.getUuid();
+        String captcha = redisCache.getCacheObject(verifyKey);
+        redisCache.deleteObject(verifyKey);
+
+        if (null == captcha) {
+            sysLoginInfoService.saveLoginInfo(loginAo.getUserName(), LogStatusEnum.FAIL.getCode(), ResponseEnum.CAPTCHA_EXPIRED.getValue());
+            throw new BusinessException(ResponseEnum.CAPTCHA_EXPIRED);
+        }
+
+        if (captcha.equalsIgnoreCase(loginAo.getCaptcha())) {
+            LogUtils.warn("用户：{}验证码输入错误", loginAo.getUserName());
+            sysLoginInfoService.saveLoginInfo(loginAo.getUserName(), LogStatusEnum.FAIL.getCode(), ResponseEnum.CAPTCHA_ERROR.getValue());
+            throw new BusinessException(ResponseEnum.CAPTCHA_ERROR);
+        }
 
         Authentication authentication = null;
         try {

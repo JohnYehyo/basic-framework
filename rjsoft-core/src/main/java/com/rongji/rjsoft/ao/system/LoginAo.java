@@ -40,5 +40,11 @@ public class LoginAo {
     @ApiModelProperty(value = "应用Id")
     private String appId = "rjsoft";
 
+    /**
+     * uuid
+     */
+    @ApiModelProperty(value = "uuid")
+    private String uuid;
+
 
 }
