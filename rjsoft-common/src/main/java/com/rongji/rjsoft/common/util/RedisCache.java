@@ -209,4 +209,17 @@ public class RedisCache {
     public Collection<String> keys(final String pattern) {
         return redisTemplate.keys(pattern);
     }
+
+    /**
+     * 自增
+     *
+     * @param key
+     * @param i
+     * @return
+     */
+    public <T> Long incr(String key, int i) {
+        ValueOperations<String, T> operation = redisTemplate.opsForValue();
+        Long increment = operation.increment(key, i);
+        return increment;
+    }
 }
