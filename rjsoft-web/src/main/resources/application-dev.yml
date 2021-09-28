@@ -16,6 +16,16 @@ spring:
         max-wait: -1
         max-idle: 20
         min-idle: 0
+  servlet:
+    multipart:
+      resolve-lazily: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+server:
+  tomcat:
+    max-swallow-size: 100MB
+
 #文件存储路径
 file:
   path: D:\other\file
@@ -26,6 +36,8 @@ file:
   maxSize: 100
   avatarMaxSize: 5
   localUrl: http://127.0.0.1:8088
+
+
 # swagger开关
 swagger:
   enable: true
