@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     @ResponseBody
-    public ResponseVo handleMethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException e) {
+    public ResponseVo handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
         List<String> errorMesssages = new ArrayList<>();
 
@@ -61,7 +62,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = BindException.class)
     @ResponseBody
-    public ResponseVo handleMethodArgumentNotValidException(HttpServletRequest request, BindException e) {
+    public ResponseVo handleMethodArgumentNotValidException(BindException e) {
         BindingResult bindingResult = e.getBindingResult();
         List<String> errorMesssages = new ArrayList<>();
 
@@ -73,10 +74,17 @@ public class GlobalExceptionHandler {
         return ResponseVo.error(code, JSON.toJSONString(errorMesssages));
     }
 
+    @ExceptionHandler(value = MaxUploadSizeExceededException.class)
+    @ResponseBody
+    public ResponseVo maxUploadSizeExceededException(Exception e) {
+        LogUtils.error(ResponseEnum.SUPER_LARGE_FILE.getValue(), e);
+        return ResponseVo.error(ResponseEnum.SUPER_LARGE_FILE.getCode(), ResponseEnum.SUPER_LARGE_FILE.getValue());
+    }
+
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
-    public ResponseVo otherException(HttpServletRequest request, Exception e) {
+    public ResponseVo otherException(Exception e) {
         LogUtils.error(ResponseEnum.EXCEPTION.getValue(), e);
-        return ResponseVo.error();
+        return ResponseVo.error(ResponseEnum.EXCEPTION.getValue());
     }
 }
