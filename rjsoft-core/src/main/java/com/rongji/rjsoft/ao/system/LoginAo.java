@@ -43,7 +43,7 @@ public class LoginAo {
     /**
      * uuid
      */
-    @ApiModelProperty(value = "uuid")
+    @ApiModelProperty(value = "uuid", required = true)
     private String uuid;
 
 
