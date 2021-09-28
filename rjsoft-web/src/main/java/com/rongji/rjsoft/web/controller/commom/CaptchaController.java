@@ -3,6 +3,7 @@ package com.rongji.rjsoft.web.controller.commom;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.lang.UUID;
 import com.google.code.kaptcha.Producer;
+import com.rongji.rjsoft.common.annotation.RateAnnotation;
 import com.rongji.rjsoft.common.util.LogUtils;
 import com.rongji.rjsoft.common.util.RedisCache;
 import com.rongji.rjsoft.constants.Constants;
@@ -60,8 +61,13 @@ public class CaptchaController {
     @Value("${JohnYehyo.captchaType}")
     private String captchaType;
 
+    /**
+     * 获取验证码
+     * @return 验证码
+     */
     @ApiOperation(value = "获取验证码")
     @GetMapping
+    @RateAnnotation(time = 5, maxCount = 5)
     public Object creat() {
         // 保存验证码信息
         String uuid = UUID.fastUUID().toString();
