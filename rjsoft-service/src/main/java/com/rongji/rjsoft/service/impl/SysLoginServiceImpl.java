@@ -4,12 +4,8 @@ import com.rongji.rjsoft.ao.system.LoginAo;
 import com.rongji.rjsoft.common.security.entity.LoginUser;
 import com.rongji.rjsoft.common.security.util.TokenUtils;
 import com.rongji.rjsoft.common.util.LogUtils;
-import com.rongji.rjsoft.common.util.OsUtils;
 import com.rongji.rjsoft.common.util.RedisCache;
-import com.rongji.rjsoft.common.util.ServletUtils;
-import com.rongji.rjsoft.common.util.http.IpUtils;
 import com.rongji.rjsoft.constants.Constants;
-import com.rongji.rjsoft.entity.monitor.SysLoginInfo;
 import com.rongji.rjsoft.enums.LogStatusEnum;
 import com.rongji.rjsoft.enums.ResponseEnum;
 import com.rongji.rjsoft.exception.BusinessException;
@@ -17,13 +13,9 @@ import com.rongji.rjsoft.service.ISysLoginInfoService;
 import com.rongji.rjsoft.service.ISysLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 
 /**
  * @description: 登录
