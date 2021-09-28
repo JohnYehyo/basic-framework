@@ -1,6 +1,6 @@
 # basic-framework
 
-![](https://img.shields.io/badge/Spring%20Boot-2.3.10.RELEASE-green)![](https://img.shields.io/badge/Spring%20Security-2.3.10.RELEASE-green)![](https://img.shields.io/badge/Redis-5.0.7-red)![](https://img.shields.io/badge/MyBatis--Plus-3.3.1-yellow)![](https://img.shields.io/badge/JWT-0.9.1-yellowgreen)
+![](https://img.shields.io/badge/Spring%20Boot-2.3.10.RELEASE-green) ![](https://img.shields.io/badge/Spring%20Security-2.3.10.RELEASE-green) ![](https://img.shields.io/badge/Redis-5.0.7-red) ![](https://img.shields.io/badge/MyBatis--Plus-3.3.1-yellow) ![](https://img.shields.io/badge/JWT-0.9.1-yellowgreen)
 
 
 
