@@ -24,7 +24,7 @@ spring:
 
 server:
   tomcat:
-    max-swallow-size: 100MB
+    max-swallow-size: -1
 
 #文件存储路径
 file:
