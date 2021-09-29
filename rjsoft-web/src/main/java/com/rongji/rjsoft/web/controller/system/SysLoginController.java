@@ -9,6 +9,7 @@ import com.rongji.rjsoft.entity.system.SysUser;
 import com.rongji.rjsoft.enums.ResponseEnum;
 import com.rongji.rjsoft.service.ISysLoginService;
 import com.rongji.rjsoft.service.ISysMenuService;
+import com.rongji.rjsoft.service.ISysRoleService;
 import com.rongji.rjsoft.vo.ResponseVo;
 import com.rongji.rjsoft.vo.system.menu.SysMenuInfoVo;
 import com.rongji.rjsoft.vo.system.user.CurrentUserInfoVo;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @description: 登录
@@ -38,6 +40,7 @@ public class SysLoginController {
     private final ISysLoginService sysLoginService;
     private final TokenUtils tokenUtils;
     private final ISysMenuService sysMenuService;
+    private final ISysRoleService sysRoleService;
 
     /**
      * 登录
@@ -62,8 +65,8 @@ public class SysLoginController {
         SysUser user = loginUser.getUser();
         SysUserVo sysUserVo = new SysUserVo();
         BeanUtil.copyProperties(user, sysUserVo);
+        Set<String> roles = loginUser.getRoles();
         //暂时不需要
-//        Set<String> roles = sysRoleService.getRoleKeysByUserId(user.getUserId());
 //        Set<String> menus = sysMenuService.getMenuPermsByUserId(user.getUserId());
         CurrentUserInfoVo currentUserInfoVo = new CurrentUserInfoVo(sysUserVo, null, null);
         return ResponseVo.response(ResponseEnum.SUCCESS, currentUserInfoVo);
