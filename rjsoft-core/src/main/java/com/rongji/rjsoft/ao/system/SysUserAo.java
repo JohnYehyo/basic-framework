@@ -38,6 +38,7 @@ public class SysUserAo {
      * 部门ID
      */
     @ApiModelProperty(value = "部门id", required = false)
+    @NotNull(groups = {SysUserAo.add.class, SysUserAo.update.class}, message = "部门ID不能为空")
     private Long deptId;
 
     /**
@@ -117,12 +118,6 @@ public class SysUserAo {
      */
     @ApiModelProperty(value = "备注", required = false)
     private String remark;
-
-    /**
-     * 部门对象
-     */
-    @ApiModelProperty(value = "部门对象", required = false)
-    private SysDept dept;
 
     /**
      * 角色组
