@@ -48,7 +48,7 @@ public class SysRoleAo {
      * 显示顺序
      */
     @ApiModelProperty(value = "显示顺序", required = true)
-    @NotEmpty(groups = {SysRoleAo.add.class, SysRoleAo.update.class}, message = "显示顺序不能为空")
+    @NotNull(groups = {SysRoleAo.add.class, SysRoleAo.update.class}, message = "显示顺序不能为空")
     private Integer roleSort;
 
     /**
