@@ -59,8 +59,7 @@ public class SysMenuAo {
     /**
      * 路由地址
      */
-    @ApiModelProperty(value = "路由地址", required = true)
-    @NotEmpty(groups = {SysMenuAo.add.class, SysMenuAo.update.class}, message = "路由地址不能为空")
+    @ApiModelProperty(value = "路由地址")
     private String path;
 
     /**
