@@ -28,6 +28,7 @@ public enum ResponseEnum {
     INCONSISTENT_PASSWORD(410, "两次输入新密码不一致"),
     SAME_OLD_PASSWORD(411, "新密码和老密码不能相同"),
     EASY_PASSWORD(412, "密码需包含数字、英文、特殊符号且长度大于8位"),
+    ENCRYPTION_TO_DECRYPT(413, "加解密失败"),
     BUSY(429, "服务器繁忙，请稍后再试"),
     REPEAT_ACTION(430, "请勿重复提交"),
     EXCEPTION(1111, "系统异常，请稍后重试"),
