@@ -64,7 +64,6 @@ xxl:
         <dependency>
             <groupId>com.xuxueli</groupId>
             <artifactId>xxl-job-core</artifactId>
-            <version>${xxl-job.version}</version>
         </dependency>
 ```
 
