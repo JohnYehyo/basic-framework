@@ -3,7 +3,7 @@ package com.rongji.rjsoft.web.config;
 import com.ulisesbocchio.jasyptspringboot.EncryptablePropertyDetector;
 
 /**
- * @description:
+ * @description: Jasypt EncryptablePropertyDetector 自定义实现
  * @author: JohnYehyo
  * @create: 2021-10-09 10:30:27
  */

@@ -4,10 +4,8 @@ import com.rongji.rjsoft.common.security.util.RSAUtils;
 import com.ulisesbocchio.jasyptspringboot.EncryptablePropertyDetector;
 import com.ulisesbocchio.jasyptspringboot.EncryptablePropertyResolver;
 
-import javax.annotation.Resource;
-
 /**
- * @description:
+ * @description: Jasypt EncryptablePropertyResolver 自定义实现
  * @author: JohnYehyo
  * @create: 2021-10-09 10:46:56
  */

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @description:
+ * @description: Jasypt配置
  * @author: JohnYehyo
  * @create: 2021-10-09 10:37:09
  */
