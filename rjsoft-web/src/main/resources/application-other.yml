@@ -2,8 +2,8 @@ spring:
   #数据库连接
   datasource:
     url: jdbc:mysql://218.28.133.52:7111/rjcloud_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: ENC(mkEQTxlv2q2nQ9xpRwD7Xw==)
-    password: ENC(8eznrLiq/wsswrcDscdmR/TRF/Mvo7Cv)
+    username: HOLIDAY{Bu18EI06mLvLoP3RbcysHgiU3aRUg7TLVhUEDCV1+N3Z6f4jTSF3bDbrsxqxFxC76cciOpinflaj0iWSH+06YAXsV2FCMMKkBE9f/qPVyYmgjPIq9Pk7ghW+n8BLQhwKXjH7LWDMQx53IB8ydEY6jJhKDoFjMyg5AwPQiAUy5qE=}
+    password: HOLIDAY{ozXpz5SOns7t912lMEO4yH3nyiOtl4Uxa8oY3/HQdK+MHG7UHz/JKAiUSbMTuXT3d9LCbs7GjPe6xlwFT0BwvmR5ffvbw4tb2xtWIsTJf8xAbFAuS6osWVt02yJdfsYdDt54npTvHJ/fZVJ8FS8NTXpNsPzyFnywDQQi0vHiJG0=}
   #redis
   redis:
     host: 218.28.133.52

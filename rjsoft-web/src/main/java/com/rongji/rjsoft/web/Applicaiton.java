@@ -1,5 +1,6 @@
 package com.rongji.rjsoft.web;
 
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.ApplicationPidFileWriter;
@@ -11,6 +12,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
  * @create: 2021-04-25 19:09:03
  */
 @EnableConfigurationProperties
+@EnableEncryptableProperties
 @SpringBootApplication(scanBasePackages = {"com.rongji.rjsoft"})
 public class Applicaiton {
 
