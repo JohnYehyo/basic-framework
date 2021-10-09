@@ -25,7 +25,7 @@
 
 
 
-> 文章定时任务以来分布式定时任务调度平台[XXL-JOB](https://www.xuxueli.com/xxl-job/), 启动项目前请先启动XXL-JOB调度中心(doc文档中包含一份已编译好的调度中心可直接使用,但主要该中心数据库为公司服务器)， 如不需要此功能可删除配置文件和maven依赖中以下内容：
+> 文章定时任务依赖分布式定时任务调度平台[XXL-JOB](https://www.xuxueli.com/xxl-job/), 启动项目前请先启动XXL-JOB调度中心(doc文档中包含一份已编译好的调度中心可直接使用,但主要该中心数据库为公司服务器)， 如不需要此功能可删除配置文件和maven依赖中以下内容：
 
 - 配置文件：
 
@@ -54,18 +54,18 @@ xxl:
 
 - maven依赖
 ```xml
-		声明部分：
-			<dependency>
-                <groupId>com.xuxueli</groupId>
-                <artifactId>xxl-job-core</artifactId>
-                <version>${xxl-job.version}</version>
-            </dependency>
-        引用部分：
-            <dependency>
-                <groupId>com.xuxueli</groupId>
-                <artifactId>xxl-job-core</artifactId>
-                <version>${xxl-job.version}</version>
-            </dependency>
+    声明部分：
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+            <version>${xxl-job.version}</version>
+        </dependency>
+    引用部分：
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+            <version>${xxl-job.version}</version>
+        </dependency>
 ```
 
 
