@@ -46,3 +46,9 @@ JohnYehyo:
   captchaType: math
   # 加密公钥
   key: 113813559663B1D1
+
+jasypt:
+  encryptor:
+    password: JohnYehyo
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator

@@ -2,8 +2,8 @@ spring:
   #数据库连接
   datasource:
     url: jdbc:mysql://192.168.5.233:3306/rjcloud_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: root
-    password: 123456
+    username: ENC(VmAC7LBKPKvwmgqxw69mng==)
+    password: ENC(2QZSvN7zSTTBH5k7pgAedg==)
   #redis
   redis:
     host: 192.168.5.233

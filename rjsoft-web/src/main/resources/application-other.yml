@@ -1,12 +1,12 @@
 spring:
   #数据库连接
   datasource:
-    url: jdbc:mysql://xxx.xxx.xxx.xxx:7111/rjcloud_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: xxx
-    password: xxx
+    url: jdbc:mysql://218.28.133.52:7111/rjcloud_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: ENC(mkEQTxlv2q2nQ9xpRwD7Xw==)
+    password: ENC(8eznrLiq/wsswrcDscdmR/TRF/Mvo7Cv)
   #redis
   redis:
-    host: xxx.xxx.xxx.xxx
+    host: 218.28.133.52
 #    password: 123456
     port: 7113
     timeout: 5000
