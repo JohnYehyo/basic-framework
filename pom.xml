@@ -53,6 +53,7 @@
         <kaptcha.version>2.3.2</kaptcha.version>
         <xxl-job.version>2.3.0</xxl-job.version>
         <jasypt-springboot-starter.version>3.0.4</jasypt-springboot-starter.version>
+        <elasticsearch.version>6.8.19</elasticsearch.version>
     </properties>
 
 
@@ -237,6 +238,19 @@
                 <groupId>com.github.ulisesbocchio</groupId>
                 <artifactId>jasypt-spring-boot-starter</artifactId>
                 <version>${jasypt-springboot-starter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.elasticsearch</groupId>
+                <artifactId>elasticsearch</artifactId>
+                <version>${elasticsearch.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>org.elasticsearch.client</groupId>
+                <artifactId>elasticsearch-rest-high-level-client</artifactId>
+                <version>${elasticsearch.version}</version>
             </dependency>
 
 
