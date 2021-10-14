@@ -8,7 +8,6 @@ import com.rongji.rjsoft.query.search.SearchQuery;
 import com.rongji.rjsoft.service.IEsService;
 import com.rongji.rjsoft.vo.CommonPage;
 import com.rongji.rjsoft.web.Applicaiton;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +52,7 @@ public class EsTest {
         params.add(searchBaseQuery);
         SearchBaseQuery searchBaseQuery1 = new SearchBaseQuery();
         searchBaseQuery1.setKey("method");
-        searchBaseQuery1.setValue("修改个人信息");
+        searchBaseQuery1.setValue("删除菜单");
         params.add(searchBaseQuery1);
 
         searchPageQuery.setParam(params);

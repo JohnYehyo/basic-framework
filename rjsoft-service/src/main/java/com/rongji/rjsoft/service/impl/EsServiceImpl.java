@@ -2,10 +2,7 @@ package com.rongji.rjsoft.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.rongji.rjsoft.common.util.LogUtils;
-import com.rongji.rjsoft.entity.monitor.SysOperationLog;
 import com.rongji.rjsoft.query.search.SearchBaseQuery;
 import com.rongji.rjsoft.query.search.SearchPageQuery;
 import com.rongji.rjsoft.query.search.SearchQuery;
@@ -39,7 +36,6 @@ import org.elasticsearch.index.query.*;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.ScoreSortBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,10 +43,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * @author JohnYehyo
@@ -407,7 +401,7 @@ public class EsServiceImpl implements IEsService {
             }
 
             List<SearchBaseQuery> params = searchPageQuery.getParam();
-            addBoolQuery(sourceBuilder, boolBuilder, params, true);
+            addBoolQuery(sourceBuilder, boolBuilder, params, false);
 
         }
         sourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
