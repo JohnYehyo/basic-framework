@@ -8,7 +8,6 @@ import com.rongji.rjsoft.common.security.entity.LoginUser;
 import com.rongji.rjsoft.common.security.util.SecurityUtils;
 import com.rongji.rjsoft.common.security.util.TokenUtils;
 import com.rongji.rjsoft.common.util.ServletUtils;
-import com.rongji.rjsoft.constants.Constants;
 import com.rongji.rjsoft.entity.system.SysDept;
 import com.rongji.rjsoft.entity.system.SysRole;
 import com.rongji.rjsoft.entity.system.SysUser;
@@ -19,8 +18,9 @@ import com.rongji.rjsoft.service.ISysPersonService;
 import com.rongji.rjsoft.service.ISysRoleService;
 import com.rongji.rjsoft.vo.ResponseVo;
 import com.rongji.rjsoft.vo.system.person.PersonInfoVo;
-import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,16 +35,22 @@ import java.util.stream.Collectors;
  * @create: 2021-09-09 16:27:09
  */
 @Service
-@AllArgsConstructor
 public class SysPersonServiceImpl implements ISysPersonService {
 
-    private final TokenUtils tokenUtils;
+    @Value("${server.servlet.context-path}")
+    private String CONTEXT_PATH;
 
-    private final ISysRoleService sysRoleService;
+    @Autowired
+    private TokenUtils tokenUtils;
 
-    private final SysRoleMapper sysRoleMapper;
+    @Autowired
+    private ISysRoleService sysRoleService;
 
-    private final SysUserMapper sysUserMapper;
+    @Autowired
+    private SysRoleMapper sysRoleMapper;
+
+    @Autowired
+    private SysUserMapper sysUserMapper;
 
     private static final String PATTERN = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[~!@#$%^&_*-])[\\da-zA-Z~!@#$%^&_*-]{8,}$";
 
@@ -59,6 +65,7 @@ public class SysPersonServiceImpl implements ISysPersonService {
         SysUser user = loginUser.getUser();
         PersonInfoVo personInfoVo = new PersonInfoVo();
         BeanUtil.copyProperties(user, personInfoVo);
+        personInfoVo.setAvatar(CONTEXT_PATH + personInfoVo.getAvatar());
         SysDept sysDept = loginUser.getSysDept();
         if (null != sysDept) {
             personInfoVo.setDeptName(sysDept.getDeptName());
@@ -169,12 +176,11 @@ public class SysPersonServiceImpl implements ISysPersonService {
     /**
      * 判断密码是否相同
      *
-     * @param rawPassword 真实密码
+     * @param rawPassword     真实密码
      * @param encodedPassword 加密后字符
      * @return 结果
      */
-    public static boolean matchesPassword(String rawPassword, String encodedPassword)
-    {
+    public static boolean matchesPassword(String rawPassword, String encodedPassword) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
