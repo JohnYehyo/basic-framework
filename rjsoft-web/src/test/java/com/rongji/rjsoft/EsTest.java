@@ -34,10 +34,11 @@ public class EsTest {
     private IEsService esService;
 
     @Test
-    public void List() throws IOException, ParseException {
+    public void List() throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date sTime = format.parse("2020-03-01 00:00:00");
-        Date eTime = format.parse("20201-10-12 00:00:00");;
+        Date eTime = format.parse("20201-10-12 00:00:00");
+        ;
         Long begin = sTime == null ? null : sTime.getTime();
         Long end = eTime == null ? null : eTime.getTime();
 
@@ -62,7 +63,7 @@ public class EsTest {
         searchPageQuery.setBranchKey("branchKey");
         searchPageQuery.setBranchCode("");
         searchPageQuery.setClazz(SysOperationLog.class);
-        CommonPage<SysOperationLog> page = esService.queryForlist(searchPageQuery);
+        CommonPage<SysOperationLog> page = (CommonPage<SysOperationLog>) esService.queryForlist(searchPageQuery).getData();
         System.out.println(JSON.toJSONString(page));
     }
 
@@ -78,7 +79,7 @@ public class EsTest {
         params.add(searchBaseQuery);
         searchQuery.setParam(params);
         searchQuery.setClazz(SysOperationLog.class);
-        SysOperationLog sysOperationLog = esService.queryForEntity(searchQuery);
+        SysOperationLog sysOperationLog = (SysOperationLog) esService.queryForEntity(searchQuery).getData();
         System.out.println(sysOperationLog);
     }
 

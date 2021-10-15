@@ -3,11 +3,13 @@ package com.rongji.rjsoft.service.impl;
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import com.rongji.rjsoft.common.util.LogUtils;
+import com.rongji.rjsoft.enums.ResponseEnum;
 import com.rongji.rjsoft.query.search.SearchBaseQuery;
 import com.rongji.rjsoft.query.search.SearchPageQuery;
 import com.rongji.rjsoft.query.search.SearchQuery;
 import com.rongji.rjsoft.service.IEsService;
 import com.rongji.rjsoft.vo.CommonPage;
+import com.rongji.rjsoft.vo.ResponseVo;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.ElasticsearchException;
 import org.elasticsearch.action.ActionListener;
@@ -355,10 +357,9 @@ public class EsServiceImpl implements IEsService {
      * @param searchPageQuery 查询条件
      * @param <T>             泛型
      * @return 翻页结果
-     * @throws IOException
      */
     @Override
-    public <T> CommonPage<T> queryForlist(SearchPageQuery searchPageQuery) throws IOException {
+    public <T> ResponseVo<T> queryForlist(SearchPageQuery searchPageQuery) {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(searchPageQuery.getIndexName());
         searchRequest.types(searchPageQuery.getIndexType());
@@ -407,7 +408,13 @@ public class EsServiceImpl implements IEsService {
         sourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
 //        sourceBuilder.sort(new FieldSortBuilder("executionTime.keyword").order(SortOrder.DESC));
         searchRequest.source(sourceBuilder);
-        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse searchResponse = null;
+        try {
+            searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            LogUtils.error("ES查询失败:", e);
+            return ResponseVo.error("查询失败");
+        }
         SearchHit[] results = searchResponse.getHits().getHits();
         long totalHits = searchResponse.getHits().getTotalHits();
         if (null == results || results.length == 0) {
@@ -421,7 +428,7 @@ public class EsServiceImpl implements IEsService {
                 totalHits / searchPageQuery.getPageSize() : totalHits / searchPageQuery.getPageSize() + 1);
         page.setTotal(totalHits);
         page.setList(list);
-        return page;
+        return ResponseVo.response(ResponseEnum.SUCCESS, page);
 
     }
 
@@ -472,10 +479,9 @@ public class EsServiceImpl implements IEsService {
      * @param searchQuery 查询条件
      * @param <T>         泛型
      * @return 实例结果
-     * @throws IOException
      */
     @Override
-    public <T> T queryForEntity(SearchQuery searchQuery) throws IOException {
+    public <T> ResponseVo<T> queryForEntity(SearchQuery searchQuery) {
         SearchRequest searchRequest = new SearchRequest();
         searchRequest.indices(searchQuery.getIndexName());
         searchRequest.types(searchQuery.getIndexType());
@@ -489,22 +495,28 @@ public class EsServiceImpl implements IEsService {
 
 
         searchRequest.source(sourceBuilder);
-        SearchResponse searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchResponse searchResponse = null;
+        try {
+            searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            LogUtils.error("ES查询失败:", e);
+            return ResponseVo.error("查询失败");
+        }
         SearchHit[] results = searchResponse.getHits().getHits();
         List<T> list = getOriginals(searchQuery.getClazz(), results);
         if (null == list || list.size() == 0) {
             return null;
         }
-        return list.get(0);
+        return ResponseVo.response(ResponseEnum.SUCCESS, list.get(0));
     }
 
     private void addBoolQuery(SearchSourceBuilder sourceBuilder, BoolQueryBuilder boolBuilder,
-                           List<SearchBaseQuery> params, boolean fuzzy) {
+                              List<SearchBaseQuery> params, boolean fuzzy) {
         for (SearchBaseQuery param : params) {
             //条件和值都不为空进行模糊查询然后合并时间范围查询和pid前缀查询
             MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder(param.getKey(),
                     param.getValue());
-            if(fuzzy){
+            if (fuzzy) {
                 // 启动模糊查询
                 matchQueryBuilder.fuzziness(Fuzziness.AUTO);
             }
