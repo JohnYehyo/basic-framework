@@ -17,6 +17,8 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StopWatch;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -52,7 +54,7 @@ public class ResponseBodyAspect {
         try {
             printRequestParam(controllerName, methodName, args);
         } catch (Exception e) {
-            LogUtils.error("记录入参异常:{}||{}||{}", controllerName, methodName, args, e);
+            LogUtils.error("记录入参异常:{}:{}:{}", controllerName, methodName, args, e);
         }
         result = joinPoint.proceed(args);
         if (!(result instanceof ResponseEntity) && !(result instanceof ResponseVo)) {
@@ -73,7 +75,10 @@ public class ResponseBodyAspect {
     private void printRequestParam(String controllerName, String methodName, Object[] args) {
         List<Object> argList = new ArrayList<>();
         for (Object arg : args) {
-            if (arg instanceof MultipartFile || arg instanceof MultipartFile[]) {
+            if (arg instanceof MultipartFile
+                    || arg instanceof MultipartFile[]
+                    || arg instanceof ServletRequest
+                    || arg instanceof ServletResponse) {
                 continue;
             }
             argList.add(arg);
