@@ -15,6 +15,7 @@ import com.rongji.rjsoft.service.ISysLoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -51,20 +52,20 @@ public class SysLoginServiceImpl implements ISysLoginService {
      */
     @Override
     public String login(LoginAo loginAo) {
-//        String verifyKey = Constants.CAPTCHA_CODE_KEY + loginAo.getUuid();
-//        String captcha = redisCache.getCacheObject(verifyKey);
-//        redisCache.deleteObject(verifyKey);
-//
-//        if (null == captcha) {
-//            sysLoginInfoService.saveLoginInfo(loginAo.getUserName(), LogStatusEnum.FAIL.getCode(), ResponseEnum.CAPTCHA_EXPIRED.getValue());
-//            throw new BusinessException(ResponseEnum.CAPTCHA_EXPIRED);
-//        }
-//
-//        if (!captcha.equals(loginAo.getCaptcha())) {
-//            LogUtils.warn("用户：{}验证码输入错误", loginAo.getUserName());
-//            sysLoginInfoService.saveLoginInfo(loginAo.getUserName(), LogStatusEnum.FAIL.getCode(), ResponseEnum.CAPTCHA_ERROR.getValue());
-//            throw new BusinessException(ResponseEnum.CAPTCHA_ERROR);
-//        }
+        String verifyKey = Constants.CAPTCHA_CODE_KEY + loginAo.getUuid();
+        String captcha = redisCache.getCacheObject(verifyKey);
+        redisCache.deleteObject(verifyKey);
+
+        if (null == captcha) {
+            sysLoginInfoService.saveLoginInfo(loginAo.getUserName(), LogStatusEnum.FAIL.getCode(), ResponseEnum.CAPTCHA_EXPIRED.getValue());
+            throw new BusinessException(ResponseEnum.CAPTCHA_EXPIRED);
+        }
+
+        if (!captcha.equals(loginAo.getCaptcha())) {
+            LogUtils.warn("用户：{}验证码输入错误", loginAo.getUserName());
+            sysLoginInfoService.saveLoginInfo(loginAo.getUserName(), LogStatusEnum.FAIL.getCode(), ResponseEnum.CAPTCHA_ERROR.getValue());
+            throw new BusinessException(ResponseEnum.CAPTCHA_ERROR);
+        }
 
         String username = loginAo.getUserName();
         String password = loginAo.getPassword();
@@ -82,6 +83,9 @@ public class SysLoginServiceImpl implements ISysLoginService {
                     .authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (Exception e) {
             sysLoginInfoService.saveLoginInfo(username, LogStatusEnum.FAIL.getCode(), e.getMessage());
+            if(e.getCause() instanceof BusinessException){
+                throw (BusinessException) e.getCause();
+            }
             throw new BusinessException(ResponseEnum.LOGIN_ERROR);
         }
 
