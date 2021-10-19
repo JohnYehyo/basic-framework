@@ -47,11 +47,12 @@ public enum ResponseEnum {
     NO_PERMISSION_ACTION(1008, "无数据或无权操作"),
     USER_DISABLE(1009, "此账号已被禁用"),
     USER_DELETE(1010, "此账号已被删除"),
-    NO_DEPT(1010, "请先为账号绑定部门"),
+    NO_DEPT(1011, "请先为账号绑定部门"),
     SUPER_LONG_FILE(4000, "文件名超长"),
     SUPER_LARGE_FILE(4001, "文件超出大小限制"),
     NO_ALLOW_FILE(4002, "不支持的文件类型"),
-    NO_ALLOW_WORD(4003, "检测文章标题、描述活内容中包含敏感词:");
+    NO_ALLOW_WORD(4003, "检测文章标题、描述活内容中包含敏感词:"),
+    FILE_UPLOAD_ERROR(4004, "文件上传失败");
 
     private Integer code;
     private String value;
