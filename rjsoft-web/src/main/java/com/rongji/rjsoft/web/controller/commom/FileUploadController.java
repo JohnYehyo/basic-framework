@@ -7,6 +7,7 @@ import com.rongji.rjsoft.common.util.file.entity.FileVo;
 import com.rongji.rjsoft.enums.LogTypeEnum;
 import com.rongji.rjsoft.enums.OperatorTypeEnum;
 import com.rongji.rjsoft.enums.ResponseEnum;
+import com.rongji.rjsoft.exception.BusinessException;
 import com.rongji.rjsoft.vo.ResponseVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,7 +48,12 @@ public class FileUploadController {
     @PostMapping
     @LogAction(module = "文件上传", method = "上传文件", logType = LogTypeEnum.UPLOAD, operatorType = OperatorTypeEnum.WEB)
     public Object upload(@RequestParam("file") MultipartFile file, @Valid FileUploadAo fileUploadAo) throws IOException {
-        FileVo fileVo = FileUploadUtils.upload(path + File.separator +fileUploadAo.getBusinessType().toLowerCase(), file);
+        FileVo fileVo = null;
+        try {
+            fileVo = FileUploadUtils.upload(path + File.separator +fileUploadAo.getBusinessType().toLowerCase(), file);
+        } catch (IOException e) {
+            throw new BusinessException(ResponseEnum.FILE_UPLOAD_ERROR);
+        }
         return ResponseVo.response(ResponseEnum.SUCCESS, fileVo);
     }
 
@@ -64,9 +70,13 @@ public class FileUploadController {
     public Object upload(@RequestParam("files") MultipartFile[] files, @Valid FileUploadAo fileUploadAo) throws IOException {
         List<FileVo> list = new ArrayList<>();
         FileVo fileVo;
-        for (int i = 0; i < files.length; i++) {
-            fileVo = FileUploadUtils.upload(path + File.separator +fileUploadAo.getBusinessType().toLowerCase(), files[i]);
-            list.add(fileVo);
+        try {
+            for (int i = 0; i < files.length; i++) {
+                fileVo = FileUploadUtils.upload(path + File.separator +fileUploadAo.getBusinessType().toLowerCase(), files[i]);
+                list.add(fileVo);
+            }
+        } catch (IOException e) {
+            throw new BusinessException(ResponseEnum.FILE_UPLOAD_ERROR);
         }
         return ResponseVo.response(ResponseEnum.SUCCESS, list);
     }

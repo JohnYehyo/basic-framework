@@ -5,6 +5,8 @@ import com.rongji.rjsoft.common.util.LogUtils;
 import com.rongji.rjsoft.enums.ResponseEnum;
 import com.rongji.rjsoft.exception.BusinessException;
 import com.rongji.rjsoft.vo.ResponseVo;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
@@ -29,9 +31,14 @@ public class GlobalExceptionHandler {
 
     @ResponseBody
     @ExceptionHandler(value = BusinessException.class)
-    public ResponseVo handle(Exception e) {
+    public Object handle(Exception e) {
         BusinessException e1 = (BusinessException) e;
         LogUtils.error(e1.getMsg());
+        if (e1.getCode().equals(ResponseEnum.SUPER_LARGE_FILE.getCode())
+                || e1.getCode().equals(ResponseEnum.NO_ALLOW_FILE.getCode())
+                || e1.getCode().equals(ResponseEnum.FILE_UPLOAD_ERROR.getCode())) {
+            return new ResponseEntity(ResponseVo.error(e1.getCode(), e1.getMsg()), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         return ResponseVo.error(e1.getCode(), e1.getMsg());
     }
 
