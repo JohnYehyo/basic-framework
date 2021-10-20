@@ -4,16 +4,27 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.rongji.rjsoft.entity.common.SysCommonFile">
-        <id column="id" property="id" />
-        <result column="table_id" property="tableId" />
-        <result column="table_type" property="tableType" />
-        <result column="file_type" property="fileType" />
-        <result column="file_url" property="fileUrl" />
-        <result column="file_name" property="fileName" />
-        <result column="create_by" property="createBy" />
-        <result column="create_time" property="createTime" />
-        <result column="update_by" property="updateBy" />
-        <result column="update_time" property="updateTime" />
+        <id column="id" property="id"/>
+        <result column="table_id" property="tableId"/>
+        <result column="table_type" property="tableType"/>
+        <result column="file_url" property="fileUrl"/>
+        <result column="file_name" property="fileName"/>
+        <result column="file_type" property="fileType"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
     </resultMap>
+
+    <select id="getFiles" parameterType="com.rongji.rjsoft.query.common.SysCommonFileQuery"
+            resultType="com.rongji.rjsoft.vo.common.SysCommonFileVo">
+        select file_url, file_name, file_type from sys_common_file
+        <where>
+            table_id = #{tableId} and table_type = #{tableType}
+            <if test="null != fileType">
+                and file_type = #{fileType}
+            </if>
+        </where>
+    </select>
 
 </mapper>
