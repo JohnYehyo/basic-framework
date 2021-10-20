@@ -128,14 +128,15 @@ public class SysDeptController {
     }
 
     /**
-     * 按角色查询部门下拉列表
+     * 部门同步树
+     * @param deptId 部门id
      * @return 部门信息
      */
-    @ApiOperation(value = "按角色查询部门下拉列表")
-    @ApiImplicitParam(value = "角色id", name = "roleId", required = true)
-    @GetMapping(value = "treelist/{roleId}")
-    public Object treelistByRole(@PathVariable("roleId") Long roleId){
-        return ResponseVo.response(ResponseEnum.SUCCESS, sysDeptService.listByRoleId(roleId));
+    @ApiOperation(value = "部门同步树")
+    @ApiImplicitParam(name = "deptId", value = "机构id")
+    @GetMapping(value = "allTree")
+    public Object allTree(Long deptId){
+        return ResponseVo.response(ResponseEnum.SUCCESS, sysDeptService.allTree(deptId));
     }
 
 }

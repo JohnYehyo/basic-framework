@@ -99,4 +99,11 @@
         </foreach>
     </update>
 
+    <select id="selectAllTreeNode" resultType="com.rongji.rjsoft.vo.system.dept.SysDeptAllTreeVo">
+        select dept_id, dept_name, parent_id
+        from sys_dept
+        where find_in_set(#{deptId}, ancestors)
+        order by parent_id
+    </select>
+
 </mapper>

@@ -3,6 +3,7 @@ package com.rongji.rjsoft.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.rongji.rjsoft.entity.system.SysDept;
 import com.rongji.rjsoft.query.system.dept.DeptQuey;
+import com.rongji.rjsoft.vo.system.dept.SysDeptAllTreeVo;
 import com.rongji.rjsoft.vo.system.dept.SysDeptTreeVo;
 import com.rongji.rjsoft.vo.system.dept.SysDeptVo;
 
@@ -56,4 +57,11 @@ public interface SysDeptMapper extends BaseMapper<SysDept> {
      * @return 部门树节点信息
      */
     SysDeptTreeVo getSimpleAsynchTreeById(Long deptId);
+
+    /**
+     * 获取当前部门下的所有部门节点
+     * @param deptId 部门id
+     * @return 下属部门信息
+     */
+    List<SysDeptAllTreeVo> selectAllTreeNode(Long deptId);
 }

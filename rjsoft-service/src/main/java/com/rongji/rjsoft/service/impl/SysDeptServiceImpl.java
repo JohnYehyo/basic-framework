@@ -1,6 +1,7 @@
 package com.rongji.rjsoft.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rongji.rjsoft.ao.system.SysDeptAo;
@@ -14,6 +15,7 @@ import com.rongji.rjsoft.exception.BusinessException;
 import com.rongji.rjsoft.mapper.SysDeptMapper;
 import com.rongji.rjsoft.query.system.dept.DeptQuey;
 import com.rongji.rjsoft.service.ISysDeptService;
+import com.rongji.rjsoft.vo.system.dept.SysDeptAllTreeVo;
 import com.rongji.rjsoft.vo.system.dept.SysDeptTreeVo;
 import com.rongji.rjsoft.vo.system.dept.SysDeptVo;
 import lombok.AllArgsConstructor;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -193,11 +196,59 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     /**
      * 通过角色id获取部门树
      *
-     * @param roleId
-     * @return
+     * @param deptId 部门id
+     * @return 部门信息
      */
     @Override
-    public Object listByRoleId(Long roleId) {
-        return null;
+    public SysDeptAllTreeVo allTree(Long deptId) {
+        //当前顶级节点
+        SysDept sysDept = getTopNode(deptId);
+        if(null == sysDept){
+            throw new BusinessException(ResponseEnum.NO_DATA);
+        }
+
+        //获取所有下级节点
+        List<SysDeptAllTreeVo> treeList = sysDeptMapper.selectAllTreeNode(sysDept.getDeptId());
+
+        SysDeptAllTreeVo topNode = new SysDeptAllTreeVo();
+        BeanUtil.copyProperties(sysDept, topNode);
+
+        //树结构组装
+        if(CollectionUtil.isNotEmpty(treeList)){
+            List<SysDeptAllTreeVo> tree = new ArrayList<>();
+            tree.add(topNode);
+            assembly(tree, treeList);
+            return topNode;
+        }
+        return topNode;
+    }
+
+    private SysDept getTopNode(Long deptId) {
+        LambdaQueryWrapper<SysDept> wrapper = new LambdaQueryWrapper<>();
+        if(null != deptId) {
+            wrapper.eq(SysDept::getDeptId, deptId);
+        }
+        wrapper.last(" limit 0,1");
+        SysDept sysDept = sysDeptMapper.selectOne(wrapper);
+        return sysDept;
+    }
+
+    private void assembly(List<SysDeptAllTreeVo> tree, List<SysDeptAllTreeVo> treeList) {
+        for (SysDeptAllTreeVo sysDeptAllTreeVo : tree) {
+            List<SysDeptAllTreeVo> children = new ArrayList<>();
+            Iterator<SysDeptAllTreeVo> iterator = treeList.iterator();
+            SysDeptAllTreeVo next;
+            while (iterator.hasNext()) {
+                next = iterator.next();
+                if(next.getParentId().longValue() == sysDeptAllTreeVo.getDeptId().longValue()){
+                    children.add(next);
+                    iterator.remove();
+                }
+            }
+            sysDeptAllTreeVo.setChildren(children);
+            if(CollectionUtil.isNotEmpty(treeList)){
+                assembly(sysDeptAllTreeVo.getChildren(), treeList);
+            }
+        }
     }
 }
