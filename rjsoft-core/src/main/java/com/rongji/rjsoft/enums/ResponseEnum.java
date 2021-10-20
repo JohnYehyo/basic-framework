@@ -52,7 +52,10 @@ public enum ResponseEnum {
     SUPER_LARGE_FILE(4001, "文件超出大小限制"),
     NO_ALLOW_FILE(4002, "不支持的文件类型"),
     NO_ALLOW_WORD(4003, "检测文章标题、描述活内容中包含敏感词:"),
-    FILE_UPLOAD_ERROR(4004, "文件上传失败");
+    FILE_UPLOAD_ERROR(4004, "文件上传失败"),
+    CONNECTION_EXCEPTION(11111, "连接异常, 请尽快上线查看!"),
+    DATABASE_EXCEPTION(22222, "连接数据库异常, 请尽快上线查看!"),
+    REDIS_EXCEPTION(33332, "连接REDIS异常, 请尽快上线查看!");
 
     private Integer code;
     private String value;
