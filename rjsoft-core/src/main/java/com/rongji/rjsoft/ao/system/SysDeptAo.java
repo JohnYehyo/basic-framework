@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 /**
- * @description: bumenchuandicanshu
+ * @description: 部门传递参数
  * @author: JohnYehyo
  * @create: 2021-09-02 11:14:10
  */
@@ -35,8 +35,7 @@ public class SysDeptAo {
     /**
      * 父级部门id
      */
-    @ApiModelProperty(value = "父级部门id", required = true)
-    @NotEmpty(groups = {SysDeptAo.insert.class, SysDeptAo.update.class}, message = "上级部门不能缺失")
+    @ApiModelProperty(value = "父级部门id")
     private Long parentId;
 
     /**
@@ -82,11 +81,11 @@ public class SysDeptAo {
      */
     @ApiModelProperty(value = "行政区划code", required = true)
     @NotEmpty(groups = {SysDeptAo.insert.class, SysDeptAo.update.class}, message = "行政区划不能为空")
-    private String branch_code;
+    private String branchCode;
 
     /**
      * 部门类型
      */
     @ApiModelProperty(value = "部门类型")
-    private int dept_type;
+    private int deptType;
 }
