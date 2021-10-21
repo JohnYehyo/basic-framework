@@ -73,10 +73,14 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         SysDept sysDept = new SysDept();
         BeanUtil.copyProperties(sysDeptAo, sysDept);
         SysDept parentDept = sysDeptMapper.selectById(sysDeptAo.getParentId());
-        if (EnableEnum.DISABLE.getCode() == parentDept.getStatus()) {
-            throw new BusinessException(ResponseEnum.FAIL.getCode(), "父级部门已停用");
+        if (null == parentDept) {
+            sysDept.setAncestors("0");
+        } else {
+            if (EnableEnum.DISABLE.getCode() == parentDept.getStatus()) {
+                throw new BusinessException(ResponseEnum.FAIL.getCode(), "父级部门已停用");
+            }
+            sysDept.setAncestors(parentDept.getAncestors() + "," + parentDept.getDeptId());
         }
-        sysDept.setAncestors(parentDept.getAncestors() + "," + parentDept.getDeptId());
         return sysDeptMapper.insert(sysDept) > 0;
     }
 
@@ -93,13 +97,22 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         BeanUtil.copyProperties(sysDeptAo, sysDept);
         SysDept parentDept = sysDeptMapper.selectById(sysDeptAo.getParentId());
         SysDept dept = sysDeptMapper.selectById(sysDeptAo.getDeptId());
-        if (null != parentDept && null != dept) {
-            String newAncestors = parentDept.getAncestors() + "," + parentDept.getDeptId();
-            String oldAncestors = dept.getAncestors();
-            dept.setAncestors(newAncestors);
-            sysDept.setAncestors(newAncestors);
-            updateDeptChildren(dept.getDeptId(), newAncestors, oldAncestors);
+
+        if (null == dept) {
+            throw new BusinessException(ResponseEnum.FAIL.getCode(), "请联系管理员!");
         }
+        if (null == sysDeptAo.getParentId()) {
+            sysDept.setParentId(0L);
+        }
+
+        String newAncestors = "0";
+        if (null != parentDept) {
+            newAncestors = parentDept.getAncestors() + "," + parentDept.getDeptId();
+        }
+        String oldAncestors = dept.getAncestors();
+        dept.setAncestors(newAncestors);
+        sysDept.setAncestors(newAncestors);
+        updateDeptChildren(dept.getDeptId(), newAncestors, oldAncestors);
         return sysDeptMapper.updateById(sysDept) > 0;
     }
 
