@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "agent")
 @AllArgsConstructor
-public class AgentControlle {
+public class AgentController {
 
     private final ISysDictDataService sysDictDataService;
 
