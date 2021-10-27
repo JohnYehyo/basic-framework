@@ -279,6 +279,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return sysUserInfoVo;
     }
 
+    /**
+     * 重置密码
+     * @param userId 用户id
+     * @return 重置结果
+     */
     @Override
     public boolean restPwd(Long userId) {
         SysUser user = new SysUser();
