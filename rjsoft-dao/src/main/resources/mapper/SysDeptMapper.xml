@@ -37,7 +37,7 @@
         from sys_dept
     </sql>
 
-    <select id="selectDeptIdSByDeptId" parameterType="long" resultType="long">
+    <select id="selectDeptIdsByDeptId" parameterType="long" resultType="long">
         SELECT t.dept_id
         FROM sys_dept t
         WHERE find_in_set(#{deptId}, ancestors)

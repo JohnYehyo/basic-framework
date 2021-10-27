@@ -21,7 +21,7 @@ public interface SysDeptMapper extends BaseMapper<SysDept> {
      * @param deptId 部门id
      * @return 部门id集合
      */
-    List<Long> selectDeptIdSByDeptId(Long deptId);
+    List<Long> selectDeptIdsByDeptId(Long deptId);
 
     /**
      * 通过部门id集合查询部门信息
