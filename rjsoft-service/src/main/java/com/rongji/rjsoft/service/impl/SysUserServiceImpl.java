@@ -82,7 +82,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         }
         //部门id查询条件不为空 通过部门id查询所有下级的部门id
         if (null != userQuery.getDeptId()) {
-            List<Long> deptList = sysDeptMapper.selectDeptIdSByDeptId(userQuery.getDeptId());
+            List<Long> deptList = sysDeptMapper.selectDeptIdsByDeptId(userQuery.getDeptId());
             deptList.add(userQuery.getDeptId());
             userQuery.setDeptIds(deptList);
         }
