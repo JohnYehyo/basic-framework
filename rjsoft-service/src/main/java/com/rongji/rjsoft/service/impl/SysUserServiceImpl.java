@@ -26,6 +26,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -278,4 +279,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return sysUserInfoVo;
     }
 
+    @Override
+    public boolean restPwd(Long userId) {
+        SysUser user = new SysUser();
+        user.setUserId(userId);
+        String encryptNewPassword = SecurityUtils.encryptPassword(Constants.DEFAULT_PASSWORD);
+        user.setPassword(encryptNewPassword);
+        user.setUpdateBy(user.getUserName());
+        user.setUpdateTime(LocalDateTime.now());
+        return sysUserMapper.updatePassword(user) > 0;
+    }
 }

@@ -134,14 +134,17 @@ public class SysUserController {
 
 
     /**
-     * 鉴权测试
+     * 重置密码
      * @return 返回结果
      */
-    @PreAuthorize("@permissionIdentify.hasAnyPermi('system:user:delete')")
-    @ApiOperation(value = "鉴权测试")
-    @GetMapping(value = "test")
-    public Object test(){
-        return ResponseVo.success("测试");
+    @PreAuthorize("@permissionIdentify.hasRole('admin')")
+    @ApiOperation(value = "重置密码")
+    @PostMapping(value = "restPwd")
+    public Object restPwd(Long userId){
+        if(sysUserService.restPwd(userId)){
+            return ResponseVo.success("重置用户密码成功");
+        }
+        return ResponseVo.error("重置用户密码失败");
     }
 
 }

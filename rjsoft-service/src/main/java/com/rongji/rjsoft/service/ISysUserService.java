@@ -80,4 +80,11 @@ public interface ISysUserService extends IService<SysUser> {
      * @return 用户信息
      */
     SysUserInfoVo getUserInfoById(Long userId);
+
+    /**
+     * 重置密码
+     * @param userId 用户id
+     * @return 重置结果
+     */
+    boolean restPwd(Long userId);
 }
