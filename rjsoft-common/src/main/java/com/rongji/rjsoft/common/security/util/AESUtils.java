@@ -55,7 +55,7 @@ public class AESUtils {
     public static String byteToHexString(byte[] src) {
         StringBuilder sb = new StringBuilder();
 
-        for(int i = 0; i < src.length; ++i) {
+        for (int i = 0; i < src.length; ++i) {
             int v = src[i] & 255;
             String hv = Integer.toHexString(v);
             if (hv.length() < 2) {
@@ -74,16 +74,16 @@ public class AESUtils {
         char[] hexChars = hexString.toCharArray();
         byte[] b = new byte[length];
 
-        for(int i = 0; i < length; ++i) {
+        for (int i = 0; i < length; ++i) {
             int pos = i * 2;
-            b[i] = (byte)(charToByte(hexChars[pos]) << 4 | charToByte(hexChars[pos + 1]));
+            b[i] = (byte) (charToByte(hexChars[pos]) << 4 | (charToByte(hexChars[pos + 1]) & 0xff));
         }
 
         return b;
     }
 
     private static byte charToByte(char c) {
-        return (byte)"0123456789ABCDEF".indexOf(c);
+        return (byte) "0123456789ABCDEF".indexOf(c);
     }
 
     public static void main(String[] args) {
