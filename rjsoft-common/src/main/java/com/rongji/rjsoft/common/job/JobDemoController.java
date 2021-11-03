@@ -91,6 +91,7 @@ public class JobDemoController {
             exitValue = process.exitValue();
         } catch (Exception e) {
             XxlJobHelper.log(e);
+            Thread.currentThread().interrupt();
         } finally {
             if (bufferedReader != null) {
                 bufferedReader.close();

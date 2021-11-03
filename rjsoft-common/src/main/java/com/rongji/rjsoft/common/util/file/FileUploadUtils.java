@@ -65,7 +65,11 @@ public class FileUploadUtils {
      * @throws IOException
      */
     public static final FileVo upload(String baseDir, MultipartFile file) throws IOException {
-        int fileNamelength = file.getOriginalFilename().length();
+        String originalFilename = file.getOriginalFilename();
+        if(StringUtils.isEmpty(originalFilename)){
+            throw new BusinessException(ResponseEnum.FILE_UPLOAD_ERROR);
+        }
+        int fileNamelength = originalFilename.length();
         if (fileNamelength > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH) {
             throw new BusinessException(ResponseEnum.SUPER_LONG_FILE);
         }

@@ -50,7 +50,7 @@ public class UserMoniorServiceImpl implements IUserMonitorService {
         UserMonitorVo userMonitorVo;
         for (String key : keys) {
             loginUser = redisCache.getCacheObject(key);
-            if (null == loginUser && null == loginUser.getUser()) {
+            if (null == loginUser || null == loginUser.getUser()) {
                 continue;
             }
             if (StringUtils.isNotEmpty(userMonitorQuery.getUserName())) {
