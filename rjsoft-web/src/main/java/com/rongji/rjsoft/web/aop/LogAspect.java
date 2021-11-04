@@ -139,7 +139,7 @@ public class LogAspect {
         try {
             sysOperationLogService.save(log);
         } catch (Exception e1) {
-            LogUtils.error("纪录操作日志异常:", e1);
+            LogUtils.error("记录操作日志异常:", e1);
         }
     }
 
