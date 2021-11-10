@@ -70,4 +70,14 @@ public class SysDeptVo implements Serializable {
      */
     private LocalDateTime createTime;
 
+    /**
+     * 行政区划code
+     */
+    private String branchCode;
+
+    /**
+     * 机构名称
+     */
+    private String branchName;
+
 }
