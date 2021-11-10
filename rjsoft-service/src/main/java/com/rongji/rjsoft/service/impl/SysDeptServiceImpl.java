@@ -8,10 +8,12 @@ import com.rongji.rjsoft.ao.system.SysDeptAo;
 import com.rongji.rjsoft.common.security.entity.LoginUser;
 import com.rongji.rjsoft.common.security.util.TokenUtils;
 import com.rongji.rjsoft.common.util.ServletUtils;
+import com.rongji.rjsoft.entity.system.SysBranch;
 import com.rongji.rjsoft.entity.system.SysDept;
 import com.rongji.rjsoft.enums.EnableEnum;
 import com.rongji.rjsoft.enums.ResponseEnum;
 import com.rongji.rjsoft.exception.BusinessException;
+import com.rongji.rjsoft.mapper.SysBranchMapper;
 import com.rongji.rjsoft.mapper.SysDeptMapper;
 import com.rongji.rjsoft.query.system.dept.DeptQuey;
 import com.rongji.rjsoft.service.ISysDeptService;
@@ -43,6 +45,8 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     private final SysDeptMapper sysDeptMapper;
 
     private final TokenUtils tokenUtils;
+
+    private final SysBranchMapper sysBranchMapper;
 
 
     /**
@@ -156,6 +160,12 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         SysDept sysDept = sysDeptMapper.selectById(deptId);
         SysDeptVo sysDeptVo = new SysDeptVo();
         BeanUtil.copyProperties(sysDept, sysDeptVo);
+        LambdaQueryWrapper<SysBranch> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(SysBranch::getBranchCode, sysDept.getBranchCode());
+        wrapper.last(" limit 0, 1");
+        SysBranch sysBranch = sysBranchMapper.selectOne(wrapper);
+        sysDeptVo.setBranchName(sysBranch.getBranchName());
+        sysDeptVo.setBranchCode(sysBranch.getBranchCode());
         return sysDeptVo;
     }
 
