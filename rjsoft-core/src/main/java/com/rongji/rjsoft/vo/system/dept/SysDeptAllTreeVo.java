@@ -14,6 +14,7 @@ import java.util.List;
 public class SysDeptAllTreeVo implements Serializable {
 
     private static final long serialVersionUID = 676873841324848348L;
+
     /**
      * 部门id
      */
@@ -30,7 +31,7 @@ public class SysDeptAllTreeVo implements Serializable {
     private String deptName;
 
     /**
-     * 是否叶子节点
+     * 子节点
      */
     private List<SysDeptAllTreeVo> children;
 }

@@ -106,4 +106,10 @@
         order by parent_id
     </select>
 
+    <select id="selectAllTreeInfoNode" resultType="com.rongji.rjsoft.vo.system.dept.SysDeptAllTreeInfoVo">
+        <include refid="selectDeptVo"/>
+        where find_in_set(#{deptId}, ancestors)
+        order by parent_id
+    </select>
+
 </mapper>

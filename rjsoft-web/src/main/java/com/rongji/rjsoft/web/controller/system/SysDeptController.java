@@ -139,4 +139,16 @@ public class SysDeptController {
         return ResponseVo.response(ResponseEnum.SUCCESS, sysDeptService.allTree(deptId));
     }
 
+    /**
+     * 部门同步树列表
+     * @param deptId 部门id
+     * @return 部门信息
+     */
+    @ApiOperation(value = "部门同步树列表")
+    @ApiImplicitParam(name = "deptId", value = "机构id")
+    @GetMapping(value = "page")
+    public Object page(Long deptId){
+        return ResponseVo.response(ResponseEnum.SUCCESS, sysDeptService.pageList(deptId));
+    }
+
 }
