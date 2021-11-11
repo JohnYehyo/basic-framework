@@ -4,6 +4,7 @@ import com.rongji.rjsoft.ao.system.SysDeptAo;
 import com.rongji.rjsoft.entity.system.SysDept;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.rongji.rjsoft.query.system.dept.DeptQuey;
+import com.rongji.rjsoft.vo.system.dept.SysDeptAllTreeInfoVo;
 import com.rongji.rjsoft.vo.system.dept.SysDeptAllTreeVo;
 import com.rongji.rjsoft.vo.system.dept.SysDeptVo;
 
@@ -75,4 +76,11 @@ public interface ISysDeptService extends IService<SysDept> {
      * @return 部门树
      */
     SysDeptAllTreeVo allTree(Long deptId);
+
+    /**
+     * 部门同步树列表
+     * @param deptId 部门id
+     * @return 部门树
+     */
+    SysDeptAllTreeInfoVo pageList(Long deptId);
 }

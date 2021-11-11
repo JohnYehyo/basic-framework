@@ -17,9 +17,7 @@ import com.rongji.rjsoft.mapper.SysBranchMapper;
 import com.rongji.rjsoft.mapper.SysDeptMapper;
 import com.rongji.rjsoft.query.system.dept.DeptQuey;
 import com.rongji.rjsoft.service.ISysDeptService;
-import com.rongji.rjsoft.vo.system.dept.SysDeptAllTreeVo;
-import com.rongji.rjsoft.vo.system.dept.SysDeptTreeVo;
-import com.rongji.rjsoft.vo.system.dept.SysDeptVo;
+import com.rongji.rjsoft.vo.system.dept.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -129,7 +127,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
      */
     private void updateDeptChildren(Long deptId, String newAncestors, String oldAncestors) {
         List<SysDept> list = sysDeptMapper.selectChildrenByDeptId(deptId);
-        if(null == list || list.size() == 0){
+        if (null == list || list.size() == 0) {
             return;
         }
         for (SysDept sysDept : list) {
@@ -189,7 +187,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     @Override
     public List<SysDeptTreeVo> listByUser(Long deptId) {
         List<SysDeptTreeVo> list = new ArrayList<>();
-        if(null == deptId){
+        if (null == deptId) {
             LoginUser loginUser = tokenUtils.getLoginUser(ServletUtils.getRequest());
             deptId = loginUser.getUser().getDeptId();
             SysDeptTreeVo sysDeptTreeVo = sysDeptMapper.getSimpleAsynchTreeById(deptId);
@@ -206,6 +204,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 
     /**
      * 判断是否为叶子节点
+     *
      * @param sysDeptTreeVo 部门树节点
      * @return 是否为叶子节点
      */
@@ -217,18 +216,15 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     }
 
     /**
-     * 通过角色id获取部门树
+     * 部门同步树
      *
      * @param deptId 部门id
-     * @return 部门信息
+     * @return 部门树
      */
     @Override
     public SysDeptAllTreeVo allTree(Long deptId) {
         //当前顶级节点
         SysDept sysDept = getTopNode(deptId);
-        if(null == sysDept){
-            throw new BusinessException(ResponseEnum.NO_DATA);
-        }
 
         //获取所有下级节点
         List<SysDeptAllTreeVo> treeList = sysDeptMapper.selectAllTreeNode(sysDept.getDeptId());
@@ -237,7 +233,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         BeanUtil.copyProperties(sysDept, topNode);
 
         //树结构组装
-        if(CollectionUtil.isNotEmpty(treeList)){
+        if (CollectionUtil.isNotEmpty(treeList)) {
             List<SysDeptAllTreeVo> tree = new ArrayList<>();
             tree.add(topNode);
             assembly(tree, treeList);
@@ -248,11 +244,14 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
 
     private SysDept getTopNode(Long deptId) {
         LambdaQueryWrapper<SysDept> wrapper = new LambdaQueryWrapper<>();
-        if(null != deptId) {
+        if (null != deptId) {
             wrapper.eq(SysDept::getDeptId, deptId);
         }
         wrapper.last(" limit 0,1");
         SysDept sysDept = sysDeptMapper.selectOne(wrapper);
+        if (null == sysDept) {
+            throw new BusinessException(ResponseEnum.NO_DATA);
+        }
         return sysDept;
     }
 
@@ -263,15 +262,62 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
             SysDeptAllTreeVo next;
             while (iterator.hasNext()) {
                 next = iterator.next();
-                if(next.getParentId().longValue() == sysDeptAllTreeVo.getDeptId().longValue()){
+                if (next.getParentId().longValue() == sysDeptAllTreeVo.getDeptId().longValue()) {
                     children.add(next);
                     iterator.remove();
                 }
             }
             sysDeptAllTreeVo.setChildren(children);
-            if(CollectionUtil.isNotEmpty(treeList)){
+            if (CollectionUtil.isNotEmpty(treeList)) {
                 assembly(sysDeptAllTreeVo.getChildren(), treeList);
             }
         }
+    }
+
+    /**
+     * 部门同步树列表
+     *
+     * @param deptId 部门id
+     * @return 部门树
+     */
+    @Override
+    public SysDeptAllTreeInfoVo pageList(Long deptId) {
+        //当前顶级节点
+        SysDept sysDept = getTopNode(deptId);
+
+        //获取所有下级节点
+        List<SysDeptAllTreeInfoVo> treeList = sysDeptMapper.selectAllTreeInfoNode(sysDept.getDeptId());
+
+        SysDeptAllTreeInfoVo topNode = new SysDeptAllTreeInfoVo();
+        BeanUtil.copyProperties(sysDept, topNode);
+
+        //树结构组装
+        if (CollectionUtil.isNotEmpty(treeList)) {
+            List<SysDeptAllTreeInfoVo> tree = new ArrayList<>();
+            tree.add(topNode);
+            assemblyInfo(tree, treeList);
+            return topNode;
+        }
+        return topNode;
+    }
+
+    private void assemblyInfo(List<SysDeptAllTreeInfoVo> tree, List<SysDeptAllTreeInfoVo> treeList) {
+        for (SysDeptAllTreeInfoVo sysDeptAllTreeInfoVo : tree) {
+            List<SysDeptAllTreeInfoVo> children = new ArrayList<>();
+            Iterator<SysDeptAllTreeInfoVo> iterator = treeList.iterator();
+            SysDeptAllTreeInfoVo next;
+            while (iterator.hasNext()) {
+                next = iterator.next();
+                if (next.getParentId().longValue() == sysDeptAllTreeInfoVo.getDeptId().longValue()) {
+                    children.add(next);
+                    iterator.remove();
+                }
+            }
+            sysDeptAllTreeInfoVo.setChildren(children);
+            if (CollectionUtil.isNotEmpty(treeList)) {
+                assemblyInfo(sysDeptAllTreeInfoVo.getChildren(), treeList);
+            }
+        }
+
     }
 }
