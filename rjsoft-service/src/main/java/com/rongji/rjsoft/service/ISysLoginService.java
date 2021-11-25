@@ -1,7 +1,6 @@
 package com.rongji.rjsoft.service;
 
 import com.rongji.rjsoft.ao.system.LoginAo;
-import com.rongji.rjsoft.common.security.entity.LoginUser;
 import com.rongji.rjsoft.common.security.entity.SsoLoginUser;
 
 /**
