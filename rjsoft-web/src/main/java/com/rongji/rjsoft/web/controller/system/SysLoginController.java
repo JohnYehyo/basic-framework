@@ -3,6 +3,7 @@ package com.rongji.rjsoft.web.controller.system;
 import cn.hutool.core.bean.BeanUtil;
 import com.rongji.rjsoft.ao.system.LoginAo;
 import com.rongji.rjsoft.common.security.entity.LoginUser;
+import com.rongji.rjsoft.common.security.entity.SsoLoginUser;
 import com.rongji.rjsoft.common.security.util.TokenUtils;
 import com.rongji.rjsoft.common.util.ServletUtils;
 import com.rongji.rjsoft.entity.system.SysUser;
@@ -82,6 +83,31 @@ public class SysLoginController {
         SysUser user = loginUser.getUser();
         List<SysMenuInfoVo> list = sysMenuService.getRoutesByUserId(user.getUserId());
         return ResponseVo.response(ResponseEnum.SUCCESS, list);
+    }
+
+    /**
+     * 获取SSO Token
+     * @return
+     */
+    @ApiOperation(value = "获取SSO Token")
+    @GetMapping(value = "ssoToken")
+    public Object creatSsoToken(){
+        return ResponseVo.response(ResponseEnum.SUCCESS, sysLoginService.creatSsoToken());
+    }
+
+    /**
+     * SSO登录
+     * @param token token
+     * @return 登录结果
+     */
+    @ApiOperation(value = "SSO登录")
+    @PostMapping(value = "tokenLogin")
+    public Object tokenLogin(String token){
+        SsoLoginUser ssoLoginUser = sysLoginService.tokenLogin(token);
+        if(null == ssoLoginUser){
+            return ResponseVo.response(ResponseEnum.TOKEN_INVALID);
+        }
+        return ResponseVo.response(ResponseEnum.SUCCESS, ssoLoginUser);
     }
 
 }

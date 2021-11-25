@@ -39,6 +39,9 @@ token:
   secret: abcdefghijklmnopqrstuvwxyz
   # 令牌有效期（默认30分钟）
   expireTime: 30
+  # SSO token (单位秒)
+  sso:
+    expireTime: 30
 
 JohnYehyo:
   version: 1.0.0
