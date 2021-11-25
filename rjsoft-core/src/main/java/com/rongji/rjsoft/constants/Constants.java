@@ -84,7 +84,14 @@ public class Constants {
      */
     public static final String CMS_ADMIN = "cms_admin";
 
-
+    /**
+     * 敏感词
+     */
     public static final String SENSITIVE_WORDS = "sensitive_words";
+
+    /**
+     * SSO token key 前缀
+     */
+    public static final String SSO_KEY = "sso_key:";
 
 }
