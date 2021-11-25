@@ -124,6 +124,11 @@ public class SysLoginServiceImpl implements ISysLoginService {
         return key;
     }
 
+    /**
+     * token登录
+     * @param token token
+     * @return 登录结果
+     */
     @Override
     public SsoLoginUser tokenLogin(String token) {
         return redisCache.getCacheObject(Constants.SSO_KEY + token);
