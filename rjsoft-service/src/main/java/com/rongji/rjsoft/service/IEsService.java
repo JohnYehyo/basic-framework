@@ -1,5 +1,7 @@
 package com.rongji.rjsoft.service;
 
+import com.rongji.rjsoft.ao.search.DocAo;
+import com.rongji.rjsoft.ao.search.DocDeleteAo;
 import com.rongji.rjsoft.query.search.SearchPageQuery;
 import com.rongji.rjsoft.query.search.SearchQuery;
 import com.rongji.rjsoft.vo.ResponseVo;
@@ -24,15 +26,6 @@ public interface IEsService {
     void createIndex(String indexName, String settings) throws IOException;
 
     /**
-     * 创建索引(异步)
-     *
-     * @param indexName
-     * @param settings
-     * @throws IOException
-     */
-    void createIndexAsync(String indexName, String settings) throws IOException;
-
-    /**
      * 删除索引
      *
      * @param indexName
@@ -41,54 +34,16 @@ public interface IEsService {
     void deleteIndex(String indexName) throws IOException;
 
     /**
-     * 删除索引(异步)
-     *
-     * @param indexName
-     * @throws IOException
-     */
-    void deleteIndexAsync(String indexName) throws IOException;
-
-    /**
      * 增加/更新文档
-     *
-     * @param indexName
-     * @param typeName
-     * @param id
-     * @param jsonString
-     * @throws IOException
+     * @param docAo 文档参数
      */
-    void index(String indexName, String typeName, String id, String jsonString) throws IOException;
-
-    /**
-     * 增加更新文档(异步)
-     *
-     * @param indexName
-     * @param typeName
-     * @param id
-     * @param jsonString
-     * @throws IOException
-     */
-    void indexAsync(String indexName, String typeName, String id, String jsonString) throws IOException;
+    void addDoc(DocAo docAo) throws IOException;
 
     /**
      * 根据id删除文档
-     *
-     * @param indexName
-     * @param indexType
-     * @param id
-     * @throws IOException
+     * @param docDeleteAo 文档参数
      */
-    void deleteDoc(String indexName, String indexType, String id) throws IOException;
-
-    /**
-     * 根据id删除文档(异步)
-     *
-     * @param indexName
-     * @param indexType
-     * @param id
-     * @throws IOException
-     */
-    void deleteDocAsync(String indexName, String indexType, String id) throws IOException;
+    void deleteDoc(DocDeleteAo docDeleteAo) throws IOException;
 
     /**
      * 通过id获取文档
@@ -121,4 +76,5 @@ public interface IEsService {
      * @throws IOException
      */
     <T> ResponseVo<T> queryForEntity(SearchQuery searchQuery);
+
 }

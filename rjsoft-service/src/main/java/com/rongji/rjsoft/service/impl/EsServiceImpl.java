@@ -2,8 +2,12 @@ package com.rongji.rjsoft.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.rongji.rjsoft.ao.search.DocAo;
+import com.rongji.rjsoft.ao.search.DocDeleteAo;
 import com.rongji.rjsoft.common.util.LogUtils;
 import com.rongji.rjsoft.enums.ResponseEnum;
+import com.rongji.rjsoft.exception.BusinessException;
 import com.rongji.rjsoft.query.search.SearchBaseQuery;
 import com.rongji.rjsoft.query.search.SearchPageQuery;
 import com.rongji.rjsoft.query.search.SearchQuery;
@@ -12,7 +16,6 @@ import com.rongji.rjsoft.vo.CommonPage;
 import com.rongji.rjsoft.vo.ResponseVo;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.ElasticsearchException;
-import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.delete.DeleteRequest;
@@ -91,47 +94,6 @@ public class EsServiceImpl implements IEsService {
     }
 
     /**
-     * 创建索引(异步执行)
-     *
-     * @throws IOException
-     */
-    @Override
-    public void createIndexAsync(String indexName, String settings) throws IOException {
-        CreateIndexRequest request = new CreateIndexRequest(indexName);
-        /**
-         * {
-         * 	"settings":{
-         * 		"index":{
-         * 			"number_of_shards":1,
-         * 			"number_of_replicas":0
-         *       }
-         *    }
-         * }
-         */
-        request.settings(Settings.builder().put("number_of_shards", 1).put("number_of_replicas", 0));
-        request.mapping(settings, XContentType.JSON);
-        //异步执行
-        //异步执行创建索引请求需要将CreateIndexRequest实例和ActionListener实例传递给异步方法：
-        //CreateIndexResponse的典型监听器如下所示：
-        //异步方法不会阻塞并立即返回。
-        ActionListener<CreateIndexResponse> listener = new ActionListener<CreateIndexResponse>() {
-            @Override
-            public void onResponse(CreateIndexResponse createIndexResponse) {
-                LogUtils.info("创建索引库:" + createIndexResponse.isAcknowledged());
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                LogUtils.error("创建索引库异常:" + e.getMessage(), e);
-            }
-        };
-        //要执行的CreateIndexRequest和执行完成时要使用的ActionListener操作是否成功
-        IndicesClient indices = restHighLevelClient.indices();
-        indices.createAsync(request, listener);
-    }
-
-
-    /**
      * 删除索引
      *
      * @param indexName
@@ -176,69 +138,22 @@ public class EsServiceImpl implements IEsService {
     }
 
     /**
-     * 删除索引(异步)
-     *
-     * @param indexName
-     * @throws IOException
-     */
-    @Override
-    public void deleteIndexAsync(String indexName) throws IOException {
-        //指定要删除的索引名称
-        DeleteIndexRequest request = new DeleteIndexRequest(indexName);
-        //可选参数：
-        //设置超时，等待所有节点确认索引删除（使用TimeValue形式）
-        request.timeout(TimeValue.timeValueMinutes(2));
-        //设置超时，等待所有节点确认索引删除（使用字符串形式）
-        // request.timeout("2m");
-        //连接master节点的超时时间(使用TimeValue方式)
-        request.masterNodeTimeout(TimeValue.timeValueMinutes(1));
-        //连接master节点的超时时间(使用字符串方式)
-        // request.masterNodeTimeout("1m");
-
-        //设置IndicesOptions控制如何解决不可用的索引以及如何扩展通配符表达式
-        request.indicesOptions(IndicesOptions.lenientExpandOpen());
-
-        //异步执行删除索引请求需要将DeleteIndexRequest实例和ActionListener实例传递给异步方法：
-        //DeleteIndexResponse的典型监听器如下所示：
-        //异步方法不会阻塞并立即返回。
-        ActionListener<AcknowledgedResponse> listener = new ActionListener<AcknowledgedResponse>() {
-            @Override
-            public void onResponse(AcknowledgedResponse deleteIndexResponse) {
-                LogUtils.info("删除索引库:" + deleteIndexResponse.isAcknowledged());
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                LogUtils.error("删除索引库异常:" + e.getMessage(), e);
-            }
-        };
-        restHighLevelClient.indices().deleteAsync(request, listener);
-
-        //如果找不到索引，则会抛出ElasticsearchException：
-        try {
-            request = new DeleteIndexRequest("does_not_exist");
-            restHighLevelClient.indices().delete(request);
-        } catch (ElasticsearchException exception) {
-            if (exception.status() == RestStatus.NOT_FOUND) {
-                //如果没有找到要删除的索引，要执行某些操作
-                LogUtils.error("没有找到要删除的索引,index:" + indexName);
-            }
-        }
-    }
-
-    /**
      * 增加/更新文档
      *
-     * @param indexName  index名字
-     * @param typeName   type名字
-     * @param id         id
-     * @param jsonString 增加或修改的数据json字符串格式
-     * @throws Exception
+     * @param docAo 文档参数
      */
     @Override
-    public void index(String indexName, String typeName, String id, String jsonString) throws IOException {
-        IndexRequest indexRequest = new IndexRequest(indexName, typeName, id).
-                source(jsonString, XContentType.JSON);
+    public void addDoc(DocAo docAo) throws IOException {
+        IndexRequest indexRequest = new IndexRequest(docAo.getIndex());
+        if (StringUtils.isNotEmpty(docAo.getType())) {
+            indexRequest.type(docAo.getType());
+        } else {
+            indexRequest.type("_doc");
+        }
+        if (null != docAo.getId()) {
+            indexRequest.id(String.valueOf(docAo.getId()));
+        }
+        indexRequest.source(docAo.getContent(), XContentType.JSON);
         //同步
         IndexResponse indexResponse = restHighLevelClient.index(indexRequest, RequestOptions.DEFAULT);
         ReplicationResponse.ShardInfo shardInfo = indexResponse.getShardInfo();
@@ -247,53 +162,24 @@ public class EsServiceImpl implements IEsService {
                 String reason = failure.reason();
                 LogUtils.error("增加/更新数据异常:" + reason);
             }
+            throw new BusinessException(ResponseEnum.DOC_INSERT_EDIT_ERROR);
         }
     }
 
     /**
-     * 增加/更新文档
+     * 根据id删除文档
      *
-     * @param indexName  index名字
-     * @param typeName   type名字
-     * @param id         id
-     * @param jsonString 增加或修改的数据json字符串格式
-     * @throws Exception
+     * @param docDeleteAo 文档参数
      */
     @Override
-    public void indexAsync(String indexName, String typeName, String id, String jsonString) throws IOException {
-        IndexRequest indexRequest = new IndexRequest(indexName, typeName, id).
-                source(jsonString, XContentType.JSON);
-        ActionListener<IndexResponse> listener = new ActionListener<IndexResponse>() {
-            @Override
-            public void onResponse(IndexResponse indexResponse) {
-                ReplicationResponse.ShardInfo shardInfo = indexResponse.getShardInfo();
-                if (shardInfo.getFailed() > 0) {
-                    for (ReplicationResponse.ShardInfo.Failure failure : shardInfo.getFailures()) {
-                        String reason = failure.reason();
-                        LogUtils.error("增加/更新数据失败:" + reason);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                LogUtils.error("增加/更新数据异常:" + e.getMessage(), e);
-            }
-        };
-        restHighLevelClient.indexAsync(indexRequest, RequestOptions.DEFAULT, listener);
-    }
-
-    /**
-     * 删除文档
-     *
-     * @param indexName
-     * @param indexType
-     * @param id
-     * @throws IOException
-     */
-    @Override
-    public void deleteDoc(String indexName, String indexType, String id) throws IOException {
-        DeleteRequest request = new DeleteRequest(indexName, indexType, id);
+    public void deleteDoc(DocDeleteAo docDeleteAo) throws IOException {
+        DeleteRequest request = new DeleteRequest(docDeleteAo.getIndex());
+        if (StringUtils.isNotEmpty(docDeleteAo.getType())) {
+            request.type(docDeleteAo.getType());
+        }
+        if (null != docDeleteAo.getId()) {
+            request.id(String.valueOf(docDeleteAo.getId()));
+        }
         DeleteResponse response = restHighLevelClient.delete(request, RequestOptions.DEFAULT);
         ReplicationResponse.ShardInfo shardInfo = response.getShardInfo();
         if (shardInfo.getFailed() > 0) {
@@ -301,38 +187,8 @@ public class EsServiceImpl implements IEsService {
                 String reason = failure.reason();
                 LogUtils.error("删除数据异常:" + reason);
             }
+            throw new BusinessException(ResponseEnum.DOC_DELETE_ERROR);
         }
-    }
-
-    /**
-     * 删除文档(异步)
-     *
-     * @param indexName
-     * @param indexType
-     * @param id
-     * @throws IOException
-     */
-    @Override
-    public void deleteDocAsync(String indexName, String indexType, String id) throws IOException {
-        DeleteRequest request = new DeleteRequest(indexName, indexType, id);
-        ActionListener<DeleteResponse> listener = new ActionListener<DeleteResponse>() {
-            @Override
-            public void onResponse(DeleteResponse deleteResponse) {
-                ReplicationResponse.ShardInfo shardInfo = deleteResponse.getShardInfo();
-                if (shardInfo.getFailed() > 0) {
-                    for (ReplicationResponse.ShardInfo.Failure failure : shardInfo.getFailures()) {
-                        String reason = failure.reason();
-                        LogUtils.error("删除数据失败:" + reason);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                LogUtils.error("删除数据异常:" + e.getMessage(), e);
-            }
-        };
-        restHighLevelClient.deleteAsync(request, RequestOptions.DEFAULT, listener);
     }
 
     /**
@@ -420,16 +276,35 @@ public class EsServiceImpl implements IEsService {
         if (null == results || results.length == 0) {
             return null;
         }
-        List<T> list = getOriginals(searchPageQuery.getClazz(), results);
+
         CommonPage page = new CommonPage();
+        if (null == searchPageQuery.getClazz()) {
+            List list = getOriginals(results);
+            page.setList(list);
+        } else {
+            List<T> list = getOriginals(searchPageQuery.getClazz(), results);
+            page.setList(list);
+        }
         page.setCurrent((long) searchPageQuery.getCurrent());
         page.setPageSize((long) searchPageQuery.getPageSize());
         page.setTotalPage(totalHits % searchPageQuery.getPageSize() == 0 ?
                 totalHits / searchPageQuery.getPageSize() : totalHits / searchPageQuery.getPageSize() + 1);
         page.setTotal(totalHits);
-        page.setList(list);
         return ResponseVo.response(ResponseEnum.SUCCESS, page);
 
+    }
+
+    private List getOriginals(SearchHit[] results) {
+        List list = new ArrayList<>();
+        Object obj;
+        for (SearchHit hit : results) {
+            String sourceAsString = hit.getSourceAsString();
+            if (sourceAsString != null) {
+                obj = JSON.parseObject(sourceAsString);
+                list.add(obj);
+            }
+        }
+        return list;
     }
 
     private <T> List<T> getOriginals(Class<T> clazz, SearchHit[] results) {
@@ -503,11 +378,22 @@ public class EsServiceImpl implements IEsService {
             return ResponseVo.error("查询失败");
         }
         SearchHit[] results = searchResponse.getHits().getHits();
+        if (null == results || results.length == 0) {
+            return null;
+        }
+        if (null == searchQuery.getClazz()) {
+            List list = getOriginals(results);
+            if (null == list || list.size() == 0) {
+                return null;
+            }
+            return ResponseVo.response(ResponseEnum.SUCCESS, list.get(0));
+        }
         List<T> list = getOriginals(searchQuery.getClazz(), results);
         if (null == list || list.size() == 0) {
             return null;
         }
         return ResponseVo.response(ResponseEnum.SUCCESS, list.get(0));
+
     }
 
     private void addBoolQuery(SearchSourceBuilder sourceBuilder, BoolQueryBuilder boolBuilder,
