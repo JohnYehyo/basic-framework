@@ -1,6 +1,5 @@
 package com.rongji.rjsoft.web.controller.search;
 
-import com.rongji.rjsoft.entity.monitor.SysOperationLog;
 import com.rongji.rjsoft.query.search.SearchPageQuery;
 import com.rongji.rjsoft.query.search.SearchQuery;
 import com.rongji.rjsoft.service.IEsService;
@@ -18,7 +17,7 @@ import javax.validation.Valid;
  * @author: JohnYehyo
  * @create: 2021-10-15 12:51:55
  */
-@Api(tags = "搜索工具")
+@Api(tags = "搜索引擎-搜索工具")
 @RestController
 @RequestMapping(value = "search")
 @AllArgsConstructor
@@ -34,9 +33,6 @@ public class SearchController {
     @ApiOperation(value = "多条件搜索")
     @GetMapping(value = "list")
     public Object list(@Valid SearchPageQuery searchPageQuery) {
-        searchPageQuery.setIndexName("basic_log_index");
-        searchPageQuery.setIndexType("doc");
-        searchPageQuery.setClazz(SysOperationLog.class);
         return esService.queryForlist(searchPageQuery);
     }
 
