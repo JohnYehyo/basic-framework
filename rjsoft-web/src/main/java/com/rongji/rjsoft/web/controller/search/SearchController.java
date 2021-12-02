@@ -1,5 +1,6 @@
 package com.rongji.rjsoft.web.controller.search;
 
+import com.rongji.rjsoft.query.search.SearchMultiPageQuery;
 import com.rongji.rjsoft.query.search.SearchPageQuery;
 import com.rongji.rjsoft.query.search.SearchQuery;
 import com.rongji.rjsoft.service.IEsService;
@@ -45,5 +46,16 @@ public class SearchController {
     @GetMapping(value = "info")
     public Object list(@Valid SearchQuery searchQuery) {
         return esService.queryForEntity(searchQuery);
+    }
+
+    /**
+     * 多字段包含关键字搜索
+     * @param searchMultiPageQuery 条件对象
+     * @return 分页结果
+     */
+    @ApiOperation(value = "多字段包含关键字搜索")
+    @GetMapping(value = "multiSelect")
+    public Object multiSelect(@Valid SearchMultiPageQuery searchMultiPageQuery) {
+        return esService.multiSelect(searchMultiPageQuery);
     }
 }

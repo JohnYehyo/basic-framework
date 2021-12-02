@@ -9,6 +9,7 @@ import com.rongji.rjsoft.common.util.LogUtils;
 import com.rongji.rjsoft.enums.ResponseEnum;
 import com.rongji.rjsoft.exception.BusinessException;
 import com.rongji.rjsoft.query.search.SearchBaseQuery;
+import com.rongji.rjsoft.query.search.SearchMultiPageQuery;
 import com.rongji.rjsoft.query.search.SearchPageQuery;
 import com.rongji.rjsoft.query.search.SearchQuery;
 import com.rongji.rjsoft.service.IEsService;
@@ -38,6 +39,7 @@ import org.elasticsearch.common.unit.Fuzziness;
 import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.*;
+import org.elasticsearch.index.search.MultiMatchQuery;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -221,7 +223,7 @@ public class EsServiceImpl implements IEsService {
         searchRequest.types(searchPageQuery.getIndexType());
 
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-        sourceBuilder.from(searchPageQuery.getCurrent());
+        sourceBuilder.from(searchPageQuery.getCurrent() - 1);
         sourceBuilder.size(searchPageQuery.getPageSize());
         sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
 
@@ -410,5 +412,63 @@ public class EsServiceImpl implements IEsService {
             boolBuilder.must(matchQueryBuilder);
         }
         sourceBuilder.query(boolBuilder);
+    }
+
+    /**
+     * 多字段包含关键字搜索
+     *
+     * @param searchMultiPageQuery 条件对象
+     * @return 分页结果
+     */
+    @Override
+    public <T> ResponseVo<T> multiSelect(SearchMultiPageQuery searchMultiPageQuery) {
+        SearchRequest searchRequest = new SearchRequest();
+        searchRequest.indices(searchMultiPageQuery.getIndexName());
+        searchRequest.types(searchMultiPageQuery.getIndexType());
+
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder.from(searchMultiPageQuery.getCurrent() - 1);
+        sourceBuilder.size(searchMultiPageQuery.getPageSize());
+        sourceBuilder.timeout(new TimeValue(60, TimeUnit.SECONDS));
+
+
+        if (null == searchMultiPageQuery.getParam()) {
+            throw new BusinessException(ResponseEnum.NONE_SELECT_PARAM);
+        }
+        MultiMatchQueryBuilder multiMatchQueryBuilder = new MultiMatchQueryBuilder(
+                searchMultiPageQuery.getParam().getValue(), searchMultiPageQuery.getParam().getKey()
+        );
+        multiMatchQueryBuilder.fuzziness(Fuzziness.AUTO);
+        sourceBuilder.query(multiMatchQueryBuilder);
+
+        sourceBuilder.sort(new ScoreSortBuilder().order(SortOrder.DESC));
+        searchRequest.source(sourceBuilder);
+        SearchResponse searchResponse = null;
+        try {
+            searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            LogUtils.error("ES查询失败:", e);
+            return ResponseVo.error("查询失败");
+        }
+        SearchHit[] results = searchResponse.getHits().getHits();
+        long totalHits = searchResponse.getHits().getTotalHits();
+        if (null == results || results.length == 0) {
+            return null;
+        }
+
+        CommonPage page = new CommonPage();
+        if (null == searchMultiPageQuery.getClazz()) {
+            List list = getOriginals(results);
+            page.setList(list);
+        } else {
+            List<T> list = getOriginals(searchMultiPageQuery.getClazz(), results);
+            page.setList(list);
+        }
+        page.setCurrent((long) searchMultiPageQuery.getCurrent());
+        page.setPageSize((long) searchMultiPageQuery.getPageSize());
+        page.setTotalPage(totalHits % searchMultiPageQuery.getPageSize() == 0 ?
+                totalHits / searchMultiPageQuery.getPageSize() : totalHits / searchMultiPageQuery.getPageSize() + 1);
+        page.setTotal(totalHits);
+        return ResponseVo.response(ResponseEnum.SUCCESS, page);
     }
 }

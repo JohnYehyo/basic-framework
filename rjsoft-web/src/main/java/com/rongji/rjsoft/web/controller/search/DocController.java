@@ -41,7 +41,7 @@ public class DocController {
     @PostMapping
     @LogAction(module = "搜索引擎-文档管理", method = "新增文档", logType = LogTypeEnum.INSERT,
             operatorType = OperatorTypeEnum.WEB)
-    public ResponseVo add(@Valid DocAo docAo) throws IOException {
+    public ResponseVo add(@RequestBody @Valid DocAo docAo) throws IOException {
         esService.addDoc(docAo);
         return ResponseVo.success("更新文档成功");
     }
@@ -57,7 +57,7 @@ public class DocController {
     @PutMapping
     @LogAction(module = "搜索引擎-文档管理", method = "更新文档", logType = LogTypeEnum.UPDATE,
             operatorType = OperatorTypeEnum.WEB)
-    public ResponseVo edit(@Valid DocAo docAo) throws IOException {
+    public ResponseVo edit(@RequestBody @Valid DocAo docAo) throws IOException {
         esService.addDoc(docAo);
         return ResponseVo.success("更新文档成功");
     }
@@ -73,7 +73,7 @@ public class DocController {
     @DeleteMapping
     @LogAction(module = "搜索引擎-文档管理", method = "删除文档", logType = LogTypeEnum.DELETE,
             operatorType = OperatorTypeEnum.WEB)
-    public ResponseVo delete(@Valid DocDeleteAo docDeleteAo) throws IOException {
+    public ResponseVo delete(@RequestBody @Valid DocDeleteAo docDeleteAo) throws IOException {
         esService.deleteDoc(docDeleteAo);
         return ResponseVo.success("删除文档成功");
     }

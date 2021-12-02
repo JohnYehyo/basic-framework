@@ -57,6 +57,7 @@ public enum ResponseEnum {
     INDEX_DELETE_ERROR(5002, "删除索引失败"),
     DOC_INSERT_EDIT_ERROR(5003, "新增/更新文档失败"),
     DOC_DELETE_ERROR(5004, "删除文档失败"),
+    NONE_SELECT_PARAM(5005, "请输入查询条件"),
     CONNECTION_EXCEPTION(11111, "连接异常, 请尽快上线查看!"),
     DATABASE_EXCEPTION(22222, "连接数据库异常, 请尽快上线查看!"),
     REDIS_EXCEPTION(33332, "连接REDIS异常, 请尽快上线查看!");

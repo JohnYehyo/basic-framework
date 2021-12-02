@@ -2,6 +2,7 @@ package com.rongji.rjsoft.service;
 
 import com.rongji.rjsoft.ao.search.DocAo;
 import com.rongji.rjsoft.ao.search.DocDeleteAo;
+import com.rongji.rjsoft.query.search.SearchMultiPageQuery;
 import com.rongji.rjsoft.query.search.SearchPageQuery;
 import com.rongji.rjsoft.query.search.SearchQuery;
 import com.rongji.rjsoft.vo.ResponseVo;
@@ -77,4 +78,10 @@ public interface IEsService {
      */
     <T> ResponseVo<T> queryForEntity(SearchQuery searchQuery);
 
+    /**
+     * 多字段包含关键字搜索
+     * @param searchMultiPageQuery 条件对象
+     * @return 分页结果
+     */
+    <T> ResponseVo<T> multiSelect(SearchMultiPageQuery searchMultiPageQuery);
 }

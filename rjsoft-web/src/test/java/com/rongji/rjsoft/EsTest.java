@@ -2,9 +2,7 @@ package com.rongji.rjsoft;
 
 import com.alibaba.fastjson.JSON;
 import com.rongji.rjsoft.entity.monitor.SysOperationLog;
-import com.rongji.rjsoft.query.search.SearchBaseQuery;
-import com.rongji.rjsoft.query.search.SearchPageQuery;
-import com.rongji.rjsoft.query.search.SearchQuery;
+import com.rongji.rjsoft.query.search.*;
 import com.rongji.rjsoft.service.IEsService;
 import com.rongji.rjsoft.vo.CommonPage;
 import com.rongji.rjsoft.web.Applicaiton;
@@ -37,7 +35,7 @@ public class EsTest {
     public void List() throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date sTime = format.parse("2020-03-01 00:00:00");
-        Date eTime = format.parse("20201-10-12 00:00:00");
+        Date eTime = format.parse("2021-12-12 00:00:00");
         ;
         Long begin = sTime == null ? null : sTime.getTime();
         Long end = eTime == null ? null : eTime.getTime();
@@ -48,12 +46,12 @@ public class EsTest {
 
         List<SearchBaseQuery> params = new ArrayList<>();
         SearchBaseQuery searchBaseQuery = new SearchBaseQuery();
-        searchBaseQuery.setKey("ip");
-        searchBaseQuery.setValue("192.168.4.249");
+        searchBaseQuery.setKey("username");
+        searchBaseQuery.setValue("河南");
         params.add(searchBaseQuery);
         SearchBaseQuery searchBaseQuery1 = new SearchBaseQuery();
-        searchBaseQuery1.setKey("method");
-        searchBaseQuery1.setValue("删除菜单");
+        searchBaseQuery1.setKey("username");
+        searchBaseQuery1.setValue("司法厅");
         params.add(searchBaseQuery1);
 
         searchPageQuery.setParam(params);
@@ -63,12 +61,12 @@ public class EsTest {
         searchPageQuery.setBranchKey("branchKey");
         searchPageQuery.setBranchCode("");
         searchPageQuery.setClazz(SysOperationLog.class);
-        CommonPage<SysOperationLog> page = (CommonPage<SysOperationLog>) esService.queryForlist(searchPageQuery).getData();
-        System.out.println(JSON.toJSONString(page));
+        CommonPage<SysOperationLog> obj = (CommonPage<SysOperationLog>) esService.queryForlist(searchPageQuery).getData();
+        System.out.println(JSON.toJSONString(obj));
     }
 
     @Test
-    public void entity() throws IOException, ParseException {
+    public void entity() {
         SearchQuery<SysOperationLog> searchQuery = new SearchQuery<>();
         searchQuery.setIndexName("basic_log_index");
         searchQuery.setIndexType("doc");
@@ -86,6 +84,25 @@ public class EsTest {
     @Test
     public void deleteIndex() throws IOException {
         esService.deleteIndex("basic_log_index");
+    }
+
+    @Test
+    public void multiSelect() {
+
+        SearchMultiPageQuery searchMultiPageQuery = new SearchMultiPageQuery();
+        searchMultiPageQuery.setIndexName("index_log");
+        searchMultiPageQuery.setIndexType("_doc");
+
+        String[] keys = {"username", "password"};
+        String value = "河南";
+
+        SearchMultiBaseQuery searchMultiBaseQuery = new SearchMultiBaseQuery();
+        searchMultiBaseQuery.setKey(keys);
+        searchMultiBaseQuery.setValue(value);
+        searchMultiPageQuery.setParam(searchMultiBaseQuery);
+
+        Object obj = esService.multiSelect(searchMultiPageQuery);
+        System.out.println(JSON.toJSONString(obj));
     }
 
 }
