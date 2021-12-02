@@ -438,6 +438,7 @@ public class EsServiceImpl implements IEsService {
         MultiMatchQueryBuilder multiMatchQueryBuilder = new MultiMatchQueryBuilder(
                 searchMultiPageQuery.getParam().getValue(), searchMultiPageQuery.getParam().getKey()
         );
+        multiMatchQueryBuilder.type(MultiMatchQueryBuilder.Type.BEST_FIELDS);
         multiMatchQueryBuilder.fuzziness(Fuzziness.AUTO);
         sourceBuilder.query(multiMatchQueryBuilder);
 
