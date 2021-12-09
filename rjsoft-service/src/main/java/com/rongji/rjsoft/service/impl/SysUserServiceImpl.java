@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.rongji.rjsoft.ao.system.SysUserAo;
 import com.rongji.rjsoft.common.security.util.SecurityUtils;
 import com.rongji.rjsoft.common.util.CommonPageUtils;
+import com.rongji.rjsoft.common.util.PassWordUtils;
 import com.rongji.rjsoft.constants.Constants;
 import com.rongji.rjsoft.entity.system.SysUser;
 import com.rongji.rjsoft.entity.system.SysUserPost;
@@ -102,7 +103,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public int addUser(SysUserAo user) {
         SysUser sysUser = new SysUser();
         BeanUtil.copyProperties(user, sysUser);
-        sysUser.setPassword(SecurityUtils.encryptPassword(Constants.DEFAULT_PASSWORD));
+        sysUser.setPassword(SecurityUtils.encryptPassword(PassWordUtils.passRandom(8)));
         sysUser.setCreateBy(SecurityUtils.getUserName());
         int insert = sysUserMapper.saveUser(sysUser);
 
@@ -281,6 +282,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     /**
      * 重置密码
+     *
      * @param userId 用户id
      * @return 重置结果
      */
