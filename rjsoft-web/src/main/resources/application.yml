@@ -55,3 +55,12 @@ jasypt:
     password: JohnYehyo
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
+# 防止XSS攻击
+xss:
+  # 过滤开关
+  enabled: true
+  # 排除链接（多个用逗号分隔）
+  excludes: /agent/*
+  # 匹配链接（多个用逗号分隔）
+  urlPatterns: /*
