@@ -35,9 +35,9 @@ public interface ISysUserService extends IService<SysUser> {
     /**
      * 新增用户
      * @param user 用户表单信息
-     * @return int
+     * @return String
      */
-    int addUser(SysUserAo user);
+    String addUser(SysUserAo user);
 
     /**
      * 编辑用户
@@ -86,5 +86,5 @@ public interface ISysUserService extends IService<SysUser> {
      * @param userId 用户id
      * @return 重置结果
      */
-    boolean restPwd(Long userId);
+    String restPwd(Long userId);
 }

@@ -100,10 +100,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int addUser(SysUserAo user) {
+    public String addUser(SysUserAo user) {
         SysUser sysUser = new SysUser();
         BeanUtil.copyProperties(user, sysUser);
-        sysUser.setPassword(SecurityUtils.encryptPassword(PassWordUtils.passRandom(8)));
+        String password = PassWordUtils.passRandom(8);
+        sysUser.setPassword(SecurityUtils.encryptPassword(password));
         sysUser.setCreateBy(SecurityUtils.getUserName());
         int insert = sysUserMapper.saveUser(sysUser);
 
@@ -113,7 +114,10 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         saveUserWithRole(user);
 
-        return insert;
+        if(insert > 0){
+            return password;
+        }
+        return "";
     }
 
     /**
@@ -287,13 +291,18 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
      * @return 重置结果
      */
     @Override
-    public boolean restPwd(Long userId) {
+    public String restPwd(Long userId) {
         SysUser user = new SysUser();
         user.setUserId(userId);
-        String encryptNewPassword = SecurityUtils.encryptPassword(Constants.DEFAULT_PASSWORD);
+        String password = PassWordUtils.passRandom(8);
+        String encryptNewPassword = SecurityUtils.encryptPassword(password);
         user.setPassword(encryptNewPassword);
         user.setUpdateBy(user.getUserName());
         user.setUpdateTime(LocalDateTime.now());
-        return sysUserMapper.updatePassword(user) > 0;
+        if(sysUserMapper.updatePassword(user) > 0){
+            return password;
+        }
+        return "";
     }
+
 }
