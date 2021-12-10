@@ -87,11 +87,10 @@ public class XssFilter implements Filter {
      * ** 表示任意层路径;
      *
      * @param pattern 匹配规则
-     * @param url 需要匹配的url
+     * @param url     需要匹配的url
      * @return
      */
-    private boolean isMatch(String pattern, String url)
-    {
+    private boolean isMatch(String pattern, String url) {
         AntPathMatcher matcher = new AntPathMatcher();
         return matcher.match(pattern, url);
     }
