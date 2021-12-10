@@ -10,6 +10,11 @@ import java.nio.charset.Charset;
 public class Constants {
 
     /**
+     * 生产环境
+     */
+    public static final String PROD_VERSION = "prod";
+
+    /**
      * 默认初始密码
      */
     public static final String DEFAULT_PASSWORD = "123456";

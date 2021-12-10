@@ -50,8 +50,7 @@ public class SysLoginController {
     @ApiOperation(value = "登录")
     @PostMapping(value = "login")
     public Object login(@Valid @RequestBody LoginAo loginAo){
-        String token = sysLoginService.login(loginAo);
-        return ResponseVo.response(ResponseEnum.SUCCESS, token);
+        return sysLoginService.login(loginAo);
     }
 
     /**

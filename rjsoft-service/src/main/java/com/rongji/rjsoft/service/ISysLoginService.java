@@ -2,6 +2,7 @@ package com.rongji.rjsoft.service;
 
 import com.rongji.rjsoft.ao.system.LoginAo;
 import com.rongji.rjsoft.common.security.entity.SsoLoginUser;
+import com.rongji.rjsoft.vo.ResponseVo;
 
 /**
  * @description: 登录退出
@@ -15,7 +16,7 @@ public interface ISysLoginService {
      * @param loginAo 请求参数体
      * @return 登录情况
      */
-    String login(LoginAo loginAo);
+    ResponseVo login(LoginAo loginAo);
 
     /**
      * 创建SSO token
@@ -29,4 +30,5 @@ public interface ISysLoginService {
      * @return 登录结果
      */
     SsoLoginUser tokenLogin(String token);
+
 }

@@ -6,6 +6,7 @@ import com.rongji.rjsoft.common.security.entity.LoginUser;
 import com.rongji.rjsoft.common.security.entity.SsoLoginUser;
 import com.rongji.rjsoft.common.security.util.AESUtils;
 import com.rongji.rjsoft.common.security.util.TokenUtils;
+import com.rongji.rjsoft.common.util.LogUtils;
 import com.rongji.rjsoft.common.util.RedisCache;
 import com.rongji.rjsoft.common.util.ServletUtils;
 import com.rongji.rjsoft.constants.Constants;
@@ -15,6 +16,7 @@ import com.rongji.rjsoft.enums.ResponseEnum;
 import com.rongji.rjsoft.exception.BusinessException;
 import com.rongji.rjsoft.service.ISysLoginInfoService;
 import com.rongji.rjsoft.service.ISysLoginService;
+import com.rongji.rjsoft.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -22,6 +24,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -48,11 +52,17 @@ public class SysLoginServiceImpl implements ISysLoginService {
     @Value("${JohnYehyo.key}")
     private String KEY;
 
+    @Value("${JohnYehyo.pwd_time}")
+    private long PWD_TIME;
+
     /**
      * 令牌有效期（默认30秒钟）
      */
     @Value("${token.sso.expireTime}")
     private int expireTime;
+
+    @Value("${spring.profiles.active}")
+    private String VERSION;
 
 
     /**
@@ -62,21 +72,8 @@ public class SysLoginServiceImpl implements ISysLoginService {
      * @return
      */
     @Override
-    public String login(LoginAo loginAo) {
-//        String verifyKey = Constants.CAPTCHA_CODE_KEY + loginAo.getUuid();
-//        String captcha = redisCache.getCacheObject(verifyKey);
-//        redisCache.deleteObject(verifyKey);
-//
-//        if (null == captcha) {
-//            sysLoginInfoService.saveLoginInfo(loginAo.getUserName(), LogStatusEnum.FAIL.getCode(), ResponseEnum.CAPTCHA_EXPIRED.getValue());
-//            throw new BusinessException(ResponseEnum.CAPTCHA_EXPIRED);
-//        }
-//
-//        if (!captcha.equals(loginAo.getCaptcha())) {
-//            LogUtils.warn("用户：{}验证码输入错误", loginAo.getUserName());
-//            sysLoginInfoService.saveLoginInfo(loginAo.getUserName(), LogStatusEnum.FAIL.getCode(), ResponseEnum.CAPTCHA_ERROR.getValue());
-//            throw new BusinessException(ResponseEnum.CAPTCHA_ERROR);
-//        }
+    public ResponseVo login(LoginAo loginAo) {
+        checkCaptcha(loginAo);
 
         String username = loginAo.getUserName();
         String password = loginAo.getPassword();
@@ -105,7 +102,25 @@ public class SysLoginServiceImpl implements ISysLoginService {
                 LogStatusEnum.LOGIN_SUCCESS.getValue());
 
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        return tokenUtils.createToken(loginUser);
+        String token = tokenUtils.createToken(loginUser);
+        return checkPasswordLimit(loginUser, token);
+    }
+
+    private ResponseVo checkPasswordLimit(LoginUser loginUser, String token) {
+        LocalDateTime lastPwdTime = loginUser.getUser().getLastPwdTime();
+        //初始登录
+        if(null == lastPwdTime){
+            return ResponseVo.response(ResponseEnum.PASSWORD_FIRST_LIMIT, token);
+        }
+        //超过最长使用限制时间未更新
+        Duration duration = Duration.between(lastPwdTime,  LocalDateTime.now());
+        if(duration.toDays() > PWD_TIME){
+            ResponseVo responseVo = new ResponseVo(ResponseEnum.PASSWORD_TIME_LIMIT.getCode(),
+                    ResponseEnum.PASSWORD_TIME_LIMIT.getValue() + PWD_TIME + "天以上,请修改密码");
+            responseVo.setData(token);
+            return responseVo;
+        }
+        return ResponseVo.response(ResponseEnum.SUCCESS, token);
     }
 
     /**
@@ -133,4 +148,28 @@ public class SysLoginServiceImpl implements ISysLoginService {
     public SsoLoginUser tokenLogin(String token) {
         return redisCache.getCacheObject(Constants.SSO_KEY + token);
     }
+
+    /**
+     * 校验验证码
+     * @param loginAo
+     */
+    private void checkCaptcha(LoginAo loginAo) {
+        if (VERSION.equals(Constants.PROD_VERSION)) {
+            String verifyKey = Constants.CAPTCHA_CODE_KEY + loginAo.getUuid();
+            String captcha = redisCache.getCacheObject(verifyKey);
+            redisCache.deleteObject(verifyKey);
+
+            if (null == captcha) {
+                sysLoginInfoService.saveLoginInfo(loginAo.getUserName(), LogStatusEnum.FAIL.getCode(), ResponseEnum.CAPTCHA_EXPIRED.getValue());
+                throw new BusinessException(ResponseEnum.CAPTCHA_EXPIRED);
+            }
+
+            if (!captcha.equals(loginAo.getCaptcha())) {
+                LogUtils.warn("用户：{}验证码输入错误", loginAo.getUserName());
+                sysLoginInfoService.saveLoginInfo(loginAo.getUserName(), LogStatusEnum.FAIL.getCode(), ResponseEnum.CAPTCHA_ERROR.getValue());
+                throw new BusinessException(ResponseEnum.CAPTCHA_ERROR);
+            }
+        }
+    }
+
 }

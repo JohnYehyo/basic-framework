@@ -49,6 +49,10 @@ JohnYehyo:
   captchaType: math
   # 加密公钥
   key: 113813559663B1D1
+  # 密码使用时长限制(天)
+  pwd_time: 30
+  # 历史密码记录数
+  pwd_history: 2
 
 jasypt:
   encryptor:

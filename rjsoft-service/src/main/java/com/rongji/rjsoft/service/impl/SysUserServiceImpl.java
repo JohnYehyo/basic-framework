@@ -299,6 +299,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         user.setPassword(encryptNewPassword);
         user.setUpdateBy(user.getUserName());
         user.setUpdateTime(LocalDateTime.now());
+        user.setLastPwdTime(null);
         if(sysUserMapper.updatePassword(user) > 0){
             return password;
         }

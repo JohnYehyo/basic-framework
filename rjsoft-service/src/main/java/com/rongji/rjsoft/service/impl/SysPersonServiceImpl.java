@@ -165,6 +165,7 @@ public class SysPersonServiceImpl implements ISysPersonService {
         user.setPassword(encryptNewPassword);
         user.setUpdateBy(user.getUserName());
         user.setUpdateTime(LocalDateTime.now());
+        user.setLastPwdTime(LocalDateTime.now());
         if (sysUserMapper.updatePassword(user) > 0) {
             loginUser.setUser(user);
             tokenUtils.setLoginUser(loginUser);
