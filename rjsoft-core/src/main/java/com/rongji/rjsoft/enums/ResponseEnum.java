@@ -31,6 +31,7 @@ public enum ResponseEnum {
     ENCRYPTION_TO_DECRYPT(413, "参数加解密失败"),
     PASSWORD_FIRST_LIMIT(414, "使用初始密码登录请修改密码"),
     PASSWORD_TIME_LIMIT(415, "此密码使用已连续使用"),
+    SAME_HISTORY_PASSWORD(416, "新密码不能与最近"),
     BUSY(429, "服务器繁忙，请稍后再试"),
     REPEAT_ACTION(430, "请勿重复提交"),
     EXCEPTION(1111, "系统异常，请稍后重试"),
