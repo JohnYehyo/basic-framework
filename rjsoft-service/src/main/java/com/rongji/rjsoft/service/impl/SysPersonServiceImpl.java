@@ -62,7 +62,7 @@ public class SysPersonServiceImpl implements ISysPersonService {
     @Value("${JohnYehyo.pwd_history}")
     private int PWD_HISTORY;
 
-    private static final String PATTERN = "^(?=.*\\d)(?=.*[a-zA-Z])(?=.*[~!@#$%^&_*-])[\\da-zA-Z~!@#$%^&_*-]{8,}$";
+    private static final String PATTERN = "^(?![A-Za-z0-9]+$)(?![a-z0-9\\W]+$)(?![A-Za-z\\W]+$)(?![A-Z0-9\\W]+$)[a-zA-Z0-9\\W]{8,}$";
 
     /**
      * 个人信息
