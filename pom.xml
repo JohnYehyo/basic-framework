@@ -53,6 +53,7 @@
         <kaptcha.version>2.3.2</kaptcha.version>
         <xxl-job.version>2.3.0</xxl-job.version>
         <jasypt-springboot-starter.version>3.0.4</jasypt-springboot-starter.version>
+        <druid.version>1.2.8</druid.version>
     </properties>
 
 
@@ -237,6 +238,12 @@
                 <groupId>com.github.ulisesbocchio</groupId>
                 <artifactId>jasypt-spring-boot-starter</artifactId>
                 <version>${jasypt-springboot-starter.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
             </dependency>
 
 

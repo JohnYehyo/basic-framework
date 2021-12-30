@@ -1,9 +1,50 @@
 spring:
-  #数据库连接
   datasource:
-    url: jdbc:mysql://218.28.133.52:7111/rjcloud_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: HOLIDAY{Bu18EI06mLvLoP3RbcysHgiU3aRUg7TLVhUEDCV1+N3Z6f4jTSF3bDbrsxqxFxC76cciOpinflaj0iWSH+06YAXsV2FCMMKkBE9f/qPVyYmgjPIq9Pk7ghW+n8BLQhwKXjH7LWDMQx53IB8ydEY6jJhKDoFjMyg5AwPQiAUy5qE=}
-    password: HOLIDAY{ozXpz5SOns7t912lMEO4yH3nyiOtl4Uxa8oY3/HQdK+MHG7UHz/JKAiUSbMTuXT3d9LCbs7GjPe6xlwFT0BwvmR5ffvbw4tb2xtWIsTJf8xAbFAuS6osWVt02yJdfsYdDt54npTvHJ/fZVJ8FS8NTXpNsPzyFnywDQQi0vHiJG0=}
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    druid:
+      url: jdbc:mysql://218.28.133.52:7111/rjcloud_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+      username: HOLIDAY{Bu18EI06mLvLoP3RbcysHgiU3aRUg7TLVhUEDCV1+N3Z6f4jTSF3bDbrsxqxFxC76cciOpinflaj0iWSH+06YAXsV2FCMMKkBE9f/qPVyYmgjPIq9Pk7ghW+n8BLQhwKXjH7LWDMQx53IB8ydEY6jJhKDoFjMyg5AwPQiAUy5qE=}
+      password: HOLIDAY{ozXpz5SOns7t912lMEO4yH3nyiOtl4Uxa8oY3/HQdK+MHG7UHz/JKAiUSbMTuXT3d9LCbs7GjPe6xlwFT0BwvmR5ffvbw4tb2xtWIsTJf8xAbFAuS6osWVt02yJdfsYdDt54npTvHJ/fZVJ8FS8NTXpNsPzyFnywDQQi0vHiJG0=}
+      # 初始连接数
+      initialSize: 5
+      # 最小连接池数量
+      minIdle: 10
+      # 最大连接池数量
+      maxActive: 20
+      # 配置获取连接等待超时的时间
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      # 配置一个连接在池中最大生存的时间，单位是毫秒
+      maxEvictableIdleTimeMillis: 900000
+      # 配置检测连接是否有效
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      webStatFilter:
+        enabled: true
+      statViewServlet:
+        enabled: true
+        # 设置白名单，不填则允许所有访问
+        allow:
+        url-pattern: /druid/*
+        # 控制台管理用户名和密码
+        login-username: admin
+        login-password: 123456
+      filter:
+        stat:
+          enabled: true
+          # 慢SQL记录
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
   #redis
   redis:
     host: 218.28.133.52
@@ -38,11 +79,11 @@ file:
   localUrl: http://127.0.0.1:8088
 # swagger开关
 swagger:
-  enable: false
+  enable: true
 
 mybatis-plus:
   configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 xxl:
   job:
