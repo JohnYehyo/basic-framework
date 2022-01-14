@@ -67,5 +67,8 @@ xxl:
         </dependency>
 ```
 
+- 数据库表关系
+    ![表关系](doc/basic-frame.png)
+
 
 
