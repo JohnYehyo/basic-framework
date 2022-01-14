@@ -21,6 +21,22 @@ spring:
       resolve-lazily: true
       max-file-size: 50MB
       max-request-size: 50MB
+    #rabbitmq
+    rabbitmq:
+      host: 218.28.133.52
+      port: 7127
+      virtual-host: /johnyehyo
+      username: HOLIDAY{pHHSn4/GMQ8LoGq6wEMXIF6oK8/f92tNALMcr9/xJvvDjwGHnHY5C5owe4Lg/A5+qIXh2k3ttzDYcs8RjmUau8/htb4TOMkLaOCvscWi9gDiOHz8sJu1lXjsiQQQ4GMxINn+3Hh/RkqzJ7wLg0eMyLheGR1+gynCTHauiKLurtU=}
+      password: HOLIDAY{pWCSuAs0RdoJbh9lLZKzB/yULTUVLu5eQfvKjF7UBXf4Fo6XZNJB2Y43DH2dtSzDHicl8cUBnS1oapkhKvLtxNOa/eT3oz56FTUgRiQ0TLz8OCS/hLooYThKkeZAtHYVy1KDCNnuRleWeVBBWyaWLFDtqEyEjy6ERDd/sNJ8E+M=}
+      publisher-confirm-type: correlated
+      publisher-returns: true
+      listener:
+        simple:
+          acknowledge-mode: manual
+          retry:
+            enabled: false
+      template:
+        mandatory: true
 
 server:
   tomcat:

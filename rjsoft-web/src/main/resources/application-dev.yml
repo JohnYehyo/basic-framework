@@ -2,8 +2,8 @@ spring:
   #数据库连接
   datasource:
     url: jdbc:mysql://localhost:3306/rjcloud_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: HOLIDAY{Bu18EI06mLvLoP3RbcysHgiU3aRUg7TLVhUEDCV1+N3Z6f4jTSF3bDbrsxqxFxC76cciOpinflaj0iWSH+06YAXsV2FCMMKkBE9f/qPVyYmgjPIq9Pk7ghW+n8BLQhwKXjH7LWDMQx53IB8ydEY6jJhKDoFjMyg5AwPQiAUy5qE=}
-    password: HOLIDAY{mV1Si89XgL3sOZPhazt8M9cYW3LovYZAbK/qVhG4BODnzxc25aeC8QbvEnPtfSi0iUTE5Eub8jgs2JtFlyVV/NJNgzKKV6BaA1eRMvXPQlvneUDiG2mewQ6j6swc3g7HcBehP1u6ExJ8J84c5AQ5ZkJNquYueIMnb+cFl7Pw6Gg=}
+    username: root
+    password: 123456
   #redis
   redis:
     host: localhost
@@ -21,6 +21,22 @@ spring:
       resolve-lazily: true
       max-file-size: 50MB
       max-request-size: 50MB
+    #rabbitmq
+    rabbitmq:
+      host: localhost
+      port: 5672
+      virtual-host: /johnyehyo
+      username: admin
+      password: 123456
+      publisher-confirm-type: correlated
+      publisher-returns: true
+      listener:
+        simple:
+          acknowledge-mode: manual
+          retry:
+            enabled: false
+      template:
+        mandatory: true
 
 server:
   tomcat:

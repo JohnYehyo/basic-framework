@@ -1,12 +1,12 @@
 spring:
   #数据库连接
   datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driverClassName: com.mysql.cj.jdbc.Driver
+#    type: com.alibaba.druid.pool.DruidDataSource
+#    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://218.28.133.52:7111/rjcloud_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: HOLIDAY{TTRYXm/5m7PlTQwlbo6gvYgORRGgwAmLAhvnu48XWkJRackcblYmTirGe3hh/dhSCj7HAy3iBbEZY3YhHQ4C1herW+ykz5E0Ewg2GKsikcBboqVHNapTcRiFk3KdZYaA7USK96zJN2xkV+2Ka23dIcah6Z6f0DuAu6JqZP63w8g=}
+    password: HOLIDAY{TLZ5KWGhrj7eV08qdeWIkggzawhZOgXqv3anfnlQxeJennlx+jlW21hXpVLK0iRNFfy1Tp6QBi7nMgZHZ+5xIuak06t/a9W6bzh5em1r0WCLbX633p3Ko+smm4z0gSCEYe67jul86uPhA+wRMQqLFBYN2HM5yyEhFw3iGovo720=}
     druid:
-      url: jdbc:mysql://218.28.133.52:7111/rjcloud_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-      username: HOLIDAY{Bu18EI06mLvLoP3RbcysHgiU3aRUg7TLVhUEDCV1+N3Z6f4jTSF3bDbrsxqxFxC76cciOpinflaj0iWSH+06YAXsV2FCMMKkBE9f/qPVyYmgjPIq9Pk7ghW+n8BLQhwKXjH7LWDMQx53IB8ydEY6jJhKDoFjMyg5AwPQiAUy5qE=}
-      password: HOLIDAY{ozXpz5SOns7t912lMEO4yH3nyiOtl4Uxa8oY3/HQdK+MHG7UHz/JKAiUSbMTuXT3d9LCbs7GjPe6xlwFT0BwvmR5ffvbw4tb2xtWIsTJf8xAbFAuS6osWVt02yJdfsYdDt54npTvHJ/fZVJ8FS8NTXpNsPzyFnywDQQi0vHiJG0=}
       # 初始连接数
       initialSize: 5
       # 最小连接池数量
@@ -28,6 +28,7 @@ spring:
       testOnReturn: false
       webStatFilter:
         enabled: true
+        exclusions: "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,/swagger/*"
       statViewServlet:
         enabled: true
         # 设置白名单，不填则允许所有访问
@@ -63,6 +64,29 @@ spring:
       resolve-lazily: true
       max-file-size: 50MB
       max-request-size: 50MB
+  #rabbitmq
+  rabbitmq:
+    host: 218.28.133.52
+    port: 7127
+    virtual-host: /johnyehyo
+    username: HOLIDAY{pHHSn4/GMQ8LoGq6wEMXIF6oK8/f92tNALMcr9/xJvvDjwGHnHY5C5owe4Lg/A5+qIXh2k3ttzDYcs8RjmUau8/htb4TOMkLaOCvscWi9gDiOHz8sJu1lXjsiQQQ4GMxINn+3Hh/RkqzJ7wLg0eMyLheGR1+gynCTHauiKLurtU=}
+    password: HOLIDAY{pWCSuAs0RdoJbh9lLZKzB/yULTUVLu5eQfvKjF7UBXf4Fo6XZNJB2Y43DH2dtSzDHicl8cUBnS1oapkhKvLtxNOa/eT3oz56FTUgRiQ0TLz8OCS/hLooYThKkeZAtHYVy1KDCNnuRleWeVBBWyaWLFDtqEyEjy6ERDd/sNJ8E+M=}
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        acknowledge-mode: manual
+        retry:
+          enabled: false
+#          max-attempts: 5
+#          # 重试最大间隔时间
+#          max-interval: 10000
+#          # 重试初始间隔时间
+#          initial-interval: 2000
+#          # 间隔时间乘子，间隔时间*乘子=下一次的间隔时间，最大不能超过设置的最大间隔时间
+#          multiplier: 2
+    template:
+      mandatory: true
 
 server:
   tomcat:
@@ -80,11 +104,11 @@ file:
   localUrl: http://127.0.0.1:8088
 # swagger开关
 swagger:
-  enable: false
+  enable: true
 
 mybatis-plus:
   configuration:
-    log-impl:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 xxl:
   job:

@@ -30,7 +30,6 @@
     <properties>
         <rjsoft.version>1.0.0-RELEASE</rjsoft.version>
         <java.version>1.8</java.version>
-        <druid.version>1.1.21</druid.version>
         <guava.version>30.1-jre</guava.version>
         <fastjson.version>1.2.75</fastjson.version>
         <mysql.driver.version>8.0.16</mysql.driver.version>

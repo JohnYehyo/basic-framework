@@ -1,5 +1,5 @@
 server:
-  port: 8087
+  port: 8777
   tomcat:
     max-connections: 500
     threads:
