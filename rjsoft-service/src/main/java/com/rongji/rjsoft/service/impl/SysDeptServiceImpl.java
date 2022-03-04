@@ -10,6 +10,7 @@ import com.rongji.rjsoft.common.security.util.TokenUtils;
 import com.rongji.rjsoft.common.util.ServletUtils;
 import com.rongji.rjsoft.entity.system.SysBranch;
 import com.rongji.rjsoft.entity.system.SysDept;
+import com.rongji.rjsoft.enums.DelFlagEnum;
 import com.rongji.rjsoft.enums.EnableEnum;
 import com.rongji.rjsoft.enums.ResponseEnum;
 import com.rongji.rjsoft.exception.BusinessException;
@@ -211,6 +212,7 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
     private boolean isLeaf(SysDeptTreeVo sysDeptTreeVo) {
         LambdaQueryWrapper<SysDept> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SysDept::getParentId, sysDeptTreeVo.getDeptId());
+        wrapper.eq(SysDept::getDelFlag, DelFlagEnum.EXIST.getCode());
         Integer count = sysDeptMapper.selectCount(wrapper);
         return count > 0 ? false : true;
     }
