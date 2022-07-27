@@ -1,5 +1,5 @@
 server:
-  port: 8777
+  port: 8288
   tomcat:
     max-connections: 500
     threads:
@@ -10,6 +10,11 @@ server:
     context-path: /base
 
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  main:
+    allow-circular-references: true
   application:
     name: rjsoft
   profiles:
@@ -24,6 +29,10 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 100MB
+  cloud:
+    sentinel:
+      transport:
+        dashboard: localhost:8859
 
 #mybatis-plus配置
 mybatis-plus:
