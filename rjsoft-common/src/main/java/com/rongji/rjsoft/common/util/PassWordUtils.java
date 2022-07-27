@@ -10,7 +10,7 @@ public class PassWordUtils {
     private static String UPPERCASE_LETTER = "QWERTYUIOPASDFGHJKLZXCVBNM";
     private static String LOWER_LETTER = "qwertyuiopasdfghjklzxcvbnm";
     private static String NUMBER = "1234567890";
-    private static String SPECIAL_SYMBOL = "~!@#$%^&_*-";
+    private static String SPECIAL_SYMBOL = "~!@#$%^&*-";
 
     public static String passRandom(int num) {
         String passWord = "";
