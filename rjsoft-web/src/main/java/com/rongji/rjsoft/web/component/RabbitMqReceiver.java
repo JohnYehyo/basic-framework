@@ -25,10 +25,11 @@ public class RabbitMqReceiver {
             value = @Queue(value = "test-key", durable = "true"),
             exchange = @Exchange(value = "test-ex", durable = "true", type = ExchangeTypes.DIRECT),
             key = "test-key"
-    ))
+    ), concurrency = "10")
     public void onMessage(@Payload String body, @Headers Map<String, Object> headers, Channel channel) throws IOException {
         LogUtils.info(body + ":业务处理开始......");
         Long tag = (Long) headers.get(AmqpHeaders.DELIVERY_TAG);
+        String correlationId = (String) headers.get("spring_returned_message_correlation");
         int prefetchCount = 5;
         try {
             Thread.sleep(5000L);
