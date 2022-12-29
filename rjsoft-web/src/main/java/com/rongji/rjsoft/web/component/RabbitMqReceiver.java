@@ -27,25 +27,40 @@ public class RabbitMqReceiver {
             key = "test-key"
     ), concurrency = "10")
     public void onMessage(@Payload String body, @Headers Map<String, Object> headers, Channel channel) throws IOException {
-        LogUtils.info(body + ":业务处理开始......");
         Long tag = (Long) headers.get(AmqpHeaders.DELIVERY_TAG);
         String correlationId = (String) headers.get("spring_returned_message_correlation");
-        int prefetchCount = 5;
+        // 单条消息的大小限制，一般设为0或不设置，不限制大小
+        int prefecthSize = 0;
+        // 不要同时给消费端推送n条消息，一旦有n个消息还没ack，则该consumer将block掉，直到有ack 注意在自动应答下不生效
+        int prefetchCount = 1;
+        // 表示是否应用于channel上，即是channel级别还是consumer级别
+        boolean global = false;
+        channel.basicQos(prefecthSize, prefetchCount, global);
+        LogUtils.info("消费消息1:{}", body);
+
         try {
             Thread.sleep(5000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        LogUtils.info(body + ":业务处理完毕");
-//        channel.basicQos(0, 2, false);
+
+        int status = 0;
         try {
-//            LogUtils.info("消费消息1:" + body);
+            //具体业务处理...
+
         } catch (Exception e) {
+            status = 1;
             LogUtils.error("业务逻辑处理错误");
         } finally {
-            channel.basicAck(tag, false);
-//            channel.basicNack(tag, false, true);
-//            channel.basicNack(tag, false, false);
+            if (status == 0) {
+                //成功消费
+                channel.basicAck(tag, false);
+            } else {
+                //消费失败, 丢弃消息
+                channel.basicNack(tag, false, false);
+                //消费失败, 将消息返回队列末尾, 重复消费
+//                channel.basicNack(tag, false, true);
+            }
         }
     }
 }

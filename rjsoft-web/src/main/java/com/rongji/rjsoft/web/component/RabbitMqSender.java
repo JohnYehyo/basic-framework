@@ -26,9 +26,13 @@ public class RabbitMqSender {
                     LogUtils.error("消息发送到broker失败,原因: {}", cause);
                 }
             });
-            rabbitTemplate.setReturnCallback((message, replyCode, replyText, ex, rk) -> {
-                String correlationId = message.getMessageProperties().getCorrelationId();
-                LogUtils.error("消息：{} 发送, 应答码：{} 原因：{} 交换机: {}  路由键: {}", correlationId, replyCode, replyText, ex, rk);
+            rabbitTemplate.setReturnsCallback(returnCallback -> {
+                String correlationId = returnCallback.getMessage().getMessageProperties().getCorrelationId();
+                int replyCode = returnCallback.getReplyCode();
+                String replyText = returnCallback.getReplyText();
+                String ex = returnCallback.getExchange();
+                String rk = returnCallback.getRoutingKey();
+                LogUtils.error("消息：{} 发送, 应答码：{} 原因：{} 交换机: {}  路由键: {}", returnCallback.getMessage(), replyCode, replyText, ex, rk);
             });
             rabbitTemplate.setMandatory(true);
             rabbitTemplate.convertAndSend(exchange, routingKey, obj, correlationData);
