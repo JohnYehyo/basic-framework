@@ -32,7 +32,7 @@ public class RabbitMqReceiver {
         // 单条消息的大小限制，一般设为0或不设置，不限制大小
         int prefecthSize = 0;
         // 不要同时给消费端推送n条消息，一旦有n个消息还没ack，则该consumer将block掉，直到有ack 注意在自动应答下不生效
-        int prefetchCount = 1;
+        int prefetchCount = 30;
         // 表示是否应用于channel上，即是channel级别还是consumer级别
         boolean global = false;
         channel.basicQos(prefecthSize, prefetchCount, global);
