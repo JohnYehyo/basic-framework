@@ -1,11 +1,11 @@
 spring:
   #数据库连接
   datasource:
-#    type: com.alibaba.druid.pool.DruidDataSource
-#    driverClassName: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://218.28.133.52:7111/rjcloud_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: HOLIDAY{TTRYXm/5m7PlTQwlbo6gvYgORRGgwAmLAhvnu48XWkJRackcblYmTirGe3hh/dhSCj7HAy3iBbEZY3YhHQ4C1herW+ykz5E0Ewg2GKsikcBboqVHNapTcRiFk3KdZYaA7USK96zJN2xkV+2Ka23dIcah6Z6f0DuAu6JqZP63w8g=}
-    password: HOLIDAY{TLZ5KWGhrj7eV08qdeWIkggzawhZOgXqv3anfnlQxeJennlx+jlW21hXpVLK0iRNFfy1Tp6QBi7nMgZHZ+5xIuak06t/a9W6bzh5em1r0WCLbX633p3Ko+smm4z0gSCEYe67jul86uPhA+wRMQqLFBYN2HM5yyEhFw3iGovo720=}
+    username: HOLIDAY{GWeo7RCM+57lLPcq+xH5GKt3u50bjRVv4YnuiB8OvRkSuYtLwko6fhgv8t6yQ1vrV2tHwJUhTUciaQeh69otMVVyrnQOoKdjq+Gw05GSq8F0sYrotkrL0SYFV/0DLScCtf077ApcvsexaI3sH/0TLhANx/xdx2WqhsLAxzqRev6nxDmf42vX3/sKCRzfjhMvoBJTRWOJ/LVtDnTta12jeZd0w6aX+Ue7cI/iQwHxHt4YeXxqHZiX9YEmESjkywfQLcF0VLFH0o214MmiUEAAyKk4BkoES6gj7eLRwK6PYFxxShr6eaYat6ejU8ZfaalXQOnTMEYRq3kg55OMHsR3Ow==}
+    password: HOLIDAY{C/tLBv8CxJPGH7Q6QpSczFoHWbZn3f1uhQ7M83YscqG9wClREUJyA/qnr1BiLlBurjx95L7VsgSc8nRaLeYyy5yEnK6I/IrNEgYqYL511HWa8zdEY4jD/btWNAvp43VuSfPcAKfvnEbUhvc0ft+O8AmDANosOS2VuUqjDq6FKFHa+kXyEp5WqQrEEOzYkg8s7OynDjRIz9ZEjlykxNqx5DhViS4k3xGwH77cJ37quqWzBxc1J9r7vCTH1f45m8tc8n1IKEZfJULDpvB+/riqPdWl0l+p6uVdvY1oU3Ezyyb5yzJ/mWZBcXdr2r4LorUGTIES/hMIavz9MERqNtVq4A==}
     druid:
       # 初始连接数
       initialSize: 5
@@ -67,10 +67,10 @@ spring:
   #rabbitmq
   rabbitmq:
     host: 218.28.133.52
-    port: 7127
-    virtual-host: /johnyehyo
-    username: HOLIDAY{pHHSn4/GMQ8LoGq6wEMXIF6oK8/f92tNALMcr9/xJvvDjwGHnHY5C5owe4Lg/A5+qIXh2k3ttzDYcs8RjmUau8/htb4TOMkLaOCvscWi9gDiOHz8sJu1lXjsiQQQ4GMxINn+3Hh/RkqzJ7wLg0eMyLheGR1+gynCTHauiKLurtU=}
-    password: HOLIDAY{pWCSuAs0RdoJbh9lLZKzB/yULTUVLu5eQfvKjF7UBXf4Fo6XZNJB2Y43DH2dtSzDHicl8cUBnS1oapkhKvLtxNOa/eT3oz56FTUgRiQ0TLz8OCS/hLooYThKkeZAtHYVy1KDCNnuRleWeVBBWyaWLFDtqEyEjy6ERDd/sNJ8E+M=}
+    port: 9976
+    virtual-host: johnyehyo
+    username: HOLIDAY{LUm/LnezDowQ2rNFG9d+QLH9NVFe2K2HnQ7xNTJlNFqfT4oWzxgsqVQTi0MU42CsJZ6ND8oXFVyHFypRVWpx0rngGc6aLa2pRk1uH1d0q4zQri9WY2kTKeJIhYQDW7COsNgbTI8ECYe8EV1MTMDUCdt0iOnnq2sOZkYFs71LkwuatTnYVcunYifl2IBN/YjKvWDT4NEm7BNIunCDJMg4MAPe8SesM5rut3TDkbEjmLcVItFyzv5ptS5Iovq/qQdQX4bCFh4EELuWY0JGgMuM/5S9TvWKQCj0tjpl0MgGYuuauNZVFA/0h48d8ncSiIDT09lFUYxgt2cEUnhpajacDA==}
+    password: HOLIDAY{Ige2MnJ0iTCQnBJ2GtA/RzAhaLBOo/Ga6aw3a8r2FOzEJSRYtDGTt5eKPPzi2OTv0jzaehI8ovKR/VlOW1gbEnb3URgBVi9mRpxjSqufcrAmvpJsOERDgIS5tuE6j92T6AZWNzm1Q//pCtDCzwOD5Dm5Al9N9IYIafQ8QOXtLZanel4I/b+J8Q12Z7UdHAIAnVT/myMbHHQ9RMVfxV0VDJVLZfAFFG/axZukl/Q9H1yrPCMN/hz2STZIkQLHU+VFCGqBlOByk3JKytyExWpdy63+04s5BnqRyniFUpkS2VlFWcWTTkYQJZo9sedizV1Y6i4i1n+QGIncUYPQTv+kXA==}
     publisher-confirm-type: correlated
     publisher-returns: true
     listener:

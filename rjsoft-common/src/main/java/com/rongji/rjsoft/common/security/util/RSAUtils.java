@@ -1,6 +1,7 @@
 package com.rongji.rjsoft.common.security.util;
 
 import cn.hutool.core.codec.Base64;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import javax.crypto.Cipher;
 import java.security.*;
@@ -28,21 +29,31 @@ public class RSAUtils {
         String username = "root";
         String password = "hky4yhl9t";
         String redisPassword = "123456";
+        String rabbitmqUsername = "admin";
+        String rabbitmqPassword = "Rjsoft@2022";
         System.out.println("随机生成的公钥为:" + keyMap.get(0));
         System.out.println("随机生成的私钥为:" + keyMap.get(1));
         System.out.println();
         String messageUsername = encrypt(username, keyMap.get(0));
         String messagePassword = encrypt(password, keyMap.get(0));
         String messageRedisPassword = encrypt(redisPassword, keyMap.get(0));
+        String messageRabbitmqUsername = encrypt(rabbitmqUsername, keyMap.get(0));
+        String messageRabbitmqPassword = encrypt(rabbitmqPassword, keyMap.get(0));
         System.out.println(username + "\t加密后的字符串为:" + messageUsername);
         System.out.println(password + "\t加密后的字符串为:" + messagePassword);
         System.out.println(redisPassword + "\t加密后的字符串为:" + messageRedisPassword);
+        System.out.println(rabbitmqUsername + "\t加密后的字符串为:" + messageRabbitmqUsername);
+        System.out.println(rabbitmqPassword + "\t加密后的字符串为:" + messageRabbitmqPassword);
         String messageDeUsername = decrypt(messageUsername, keyMap.get(1));
         String messageDePassword = decrypt(messagePassword, keyMap.get(1));
         String messageDeRedisPassword = decrypt(messageRedisPassword, keyMap.get(1));
+        String messageDeRabbitmqUsername = decrypt(messageRabbitmqUsername, keyMap.get(1));
+        String messageDeRabbitmqPassword = decrypt(messageRabbitmqPassword, keyMap.get(1));
         System.out.println("还原后的字符串为:" + messageDeUsername);
         System.out.println("还原后的字符串为:" + messageDePassword);
         System.out.println("还原后的字符串为:" + messageDeRedisPassword);
+        System.out.println("还原后的字符串为:" + messageDeRabbitmqUsername);
+        System.out.println("还原后的字符串为:" + messageDeRabbitmqPassword);
     }
 
     /**
@@ -54,7 +65,7 @@ public class RSAUtils {
         // KeyPairGenerator类用于生成公钥和私钥对，基于RSA算法生成对象
         KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
         // 初始化密钥对生成器，密钥大小为96-1024位
-        keyPairGen.initialize(1024, new SecureRandom());
+        keyPairGen.initialize(2048, new SecureRandom());
         // 生成一个密钥对，保存在keyPair中
         KeyPair keyPair = keyPairGen.generateKeyPair();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
@@ -88,7 +99,7 @@ public class RSAUtils {
         RSAPublicKey pubKey = (RSAPublicKey) KeyFactory.getInstance("RSA")
                 .generatePublic(new X509EncodedKeySpec(decoded));
         // RSA加密
-        Cipher cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance("RSA/None/OAEPWithSHA-1AndMGF1Padding", new BouncyCastleProvider());
         cipher.init(Cipher.ENCRYPT_MODE, pubKey);
         String outStr = Base64.encode(cipher.doFinal(str.getBytes("UTF-8")));
         return outStr;
@@ -113,7 +124,7 @@ public class RSAUtils {
         RSAPrivateKey priKey = (RSAPrivateKey) KeyFactory.getInstance("RSA")
                 .generatePrivate(new PKCS8EncodedKeySpec(decoded));
         // RSA解密
-        Cipher cipher = Cipher.getInstance("RSA");
+        Cipher cipher = Cipher.getInstance("RSA/None/OAEPWithSHA-1AndMGF1Padding", new BouncyCastleProvider());
         cipher.init(Cipher.DECRYPT_MODE, priKey);
         String outStr = new String(cipher.doFinal(inputByte));
         return outStr;
