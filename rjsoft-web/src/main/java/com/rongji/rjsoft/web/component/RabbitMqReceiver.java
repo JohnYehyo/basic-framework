@@ -2,6 +2,7 @@ package com.rongji.rjsoft.web.component;
 
 import com.rabbitmq.client.Channel;
 import com.rongji.rjsoft.common.util.LogUtils;
+import com.rongji.rjsoft.enums.RabbitResult;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.rabbit.annotation.*;
 import org.springframework.amqp.support.AmqpHeaders;
@@ -44,22 +45,20 @@ public class RabbitMqReceiver {
             e.printStackTrace();
         }
 
-        int status = 0;
+        RabbitResult rr = RabbitResult.RETRY;
         try {
             //具体业务处理...
-
+            rr = RabbitResult.SUCCESS;
         } catch (Exception e) {
-            status = 1;
+            rr = RabbitResult.DISCARDED;
             LogUtils.error("业务逻辑处理错误");
         } finally {
-            if (status == 0) {
-                //成功消费
+            if (rr == RabbitResult.SUCCESS) {
                 channel.basicAck(tag, false);
+            } else if (rr == RabbitResult.RETRY) {
+                channel.basicNack(tag, false, true);
             } else {
-                //消费失败, 丢弃消息
                 channel.basicNack(tag, false, false);
-                //消费失败, 将消息返回队列末尾, 重复消费
-//                channel.basicNack(tag, false, true);
             }
         }
     }
