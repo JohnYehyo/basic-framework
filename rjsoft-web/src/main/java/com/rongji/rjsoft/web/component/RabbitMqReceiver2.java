@@ -33,6 +33,7 @@ public class RabbitMqReceiver2 {
     public void onMessage(@Payload String body, @Headers Map<String, Object> headers, Channel channel) throws IOException {
         Long tag = (Long) headers.get(AmqpHeaders.DELIVERY_TAG);
         String correlationId = (String) headers.get("spring_returned_message_correlation");
+        System.out.println("消费消息2,correlationId:" + correlationId);
         // 单条消息的大小限制，一般设为0或不设置，不限制大小
         int prefecthSize = 0;
         // 不要同时给消费端推送n条消息，一旦有n个消息还没ack，则该consumer将block掉，直到有ack 注意在自动应答下不生效
@@ -57,10 +58,13 @@ public class RabbitMqReceiver2 {
             LogUtils.error("业务逻辑处理错误");
         } finally {
             if (rr == RabbitResult.SUCCESS) {
+                System.out.println("123");
                 channel.basicAck(tag, false);
             } else if (rr == RabbitResult.RETRY) {
+                System.out.println("456");
                 channel.basicNack(tag, false, true);
             } else {
+                System.out.println("789");
                 channel.basicNack(tag, false, false);
             }
         }
