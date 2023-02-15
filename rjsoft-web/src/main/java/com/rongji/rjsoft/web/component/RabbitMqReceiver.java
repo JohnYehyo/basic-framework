@@ -50,13 +50,14 @@ public class RabbitMqReceiver {
         RabbitResult rr = RabbitResult.RETRY;
         try {
             //具体业务处理...
-            rr = RabbitResult.DISCARDED;
+            rr = RabbitResult.SUCCESS;
         } catch (Exception e) {
             rr = RabbitResult.DISCARDED;
             LogUtils.error("业务逻辑处理错误");
         } finally {
             if (rr == RabbitResult.SUCCESS) {
                 System.out.println("123");
+                //告诉服务器收到这条消息 无需再发了 否则消息服务器以为这条消息没处理掉 后续还会在发
                 channel.basicAck(tag, false);
             } else if (rr == RabbitResult.RETRY) {
                 System.out.println("456");
