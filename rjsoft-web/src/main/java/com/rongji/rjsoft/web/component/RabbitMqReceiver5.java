@@ -25,6 +25,13 @@ import java.util.Map;
 public class RabbitMqReceiver5 {
 
 
+    /**
+     * 交换器类型设置为fanout, 队列不指定使用默认, 可以多个队列同时收到消息
+     * @param body
+     * @param headers
+     * @param channel
+     * @throws IOException
+     */
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(),
             exchange = @Exchange(value = "am-fanout-ex", durable = "true", type = ExchangeTypes.FANOUT)
@@ -38,11 +45,11 @@ public class RabbitMqReceiver5 {
         channel.basicQos(prefecthSize, prefetchCount, global);
         RabbitResult rr = RabbitResult.RETRY;
         try {
-            LogUtils.info("5消费消息:{}", body);
+            LogUtils.info("[统一消息][接收端5]消费消息:{}, 内容:{}", correlationId, body);
             rr = RabbitResult.SUCCESS;
         } catch (Exception e) {
             rr = RabbitResult.DISCARDED;
-            LogUtils.error("业务逻辑处理错误");
+            LogUtils.error("[统一消息][接收端5]消息{}, 业务逻辑处理错误", correlationId, e);
         } finally {
             if (rr == RabbitResult.SUCCESS) {
                 //告诉服务器收到这条消息 无需再发了 否则消息服务器以为这条消息没处理掉 后续还会在发

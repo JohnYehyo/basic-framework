@@ -68,12 +68,45 @@ public class MqController {
                 UUID.fastUUID().toString());
     }
 
-    @ApiOperation(value = "消息接收数量控制")
+    @ApiOperation(value = "多个队列且队列并发控制")
     @PostMapping(value = "sendMessageByLimitReceive")
     public void sendMessageByLimitReceive(@RequestParam Object message) {
 
         for (int i = 0; i < 15; i++) {
             rabbitMqSender.submitConfirm("test-ex",
+                    "test-key",
+                    String.valueOf(i),
+                    UUID.fastUUID().toString());
+        }
+    }
+
+    @ApiOperation(value = "通配符接收消息")
+    @PostMapping(value = "sendMessageByTopicReceive")
+    public void sendMessageByTopicReceive(@RequestParam Object message) {
+
+        //通配符ak.#接收
+        for (int i = 0; i < 5; i++) {
+            rabbitMqSender.submitConfirm("am-topic-ex",
+                    "ak.test",
+                    "ak:" + i,
+                    UUID.fastUUID().toString());
+        }
+
+        //通配符am.#接收
+        for (int i = 0; i < 5; i++) {
+            rabbitMqSender.submitConfirm("am-topic-ex",
+                    "am.test",
+                    "am:" + i,
+                    UUID.fastUUID().toString());
+        }
+    }
+
+    @ApiOperation(value = "多个队列同时接收消息")
+    @PostMapping(value = "sendMessageByAllReceive")
+    public void sendMessageByAllReceive(@RequestParam Object message) {
+
+        for (int i = 0; i < 5; i++) {
+            rabbitMqSender.submitConfirm("am-fanout-ex",
                     "test-key",
                     String.valueOf(i),
                     UUID.fastUUID().toString());
