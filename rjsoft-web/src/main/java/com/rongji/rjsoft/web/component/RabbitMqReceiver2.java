@@ -29,7 +29,7 @@ public class RabbitMqReceiver2 {
             value = @Queue(value = "test-key", durable = "true"),
             exchange = @Exchange(value = "test-ex", durable = "true", type = ExchangeTypes.DIRECT),
             key = "test-key"
-    ), concurrency = "1")
+    ), concurrency = "20")
     public void onMessage(@Payload String body, @Headers Map<String, Object> headers, Channel channel) throws IOException {
         Long tag = (Long) headers.get(AmqpHeaders.DELIVERY_TAG);
         String correlationId = (String) headers.get("spring_returned_message_correlation");
@@ -41,11 +41,11 @@ public class RabbitMqReceiver2 {
         boolean global = false;
         channel.basicQos(prefecthSize, prefetchCount, global);
 
-        try {
-            Thread.sleep(5000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(2000L);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         RabbitResult rr = RabbitResult.RETRY;
         try {

@@ -2,7 +2,7 @@ spring:
   #数据库连接
   datasource:
     url: jdbc:mysql://localhost:3306/rjcloud_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: root
+    username: HOLIDAY{}
     password: 123456
   #redis
   redis:

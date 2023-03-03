@@ -68,7 +68,7 @@ spring:
   rabbitmq:
     host: 218.28.133.52
     port: 9976
-    virtual-host: johnyehyo
+    virtual-host: /
     username: HOLIDAY{LUm/LnezDowQ2rNFG9d+QLH9NVFe2K2HnQ7xNTJlNFqfT4oWzxgsqVQTi0MU42CsJZ6ND8oXFVyHFypRVWpx0rngGc6aLa2pRk1uH1d0q4zQri9WY2kTKeJIhYQDW7COsNgbTI8ECYe8EV1MTMDUCdt0iOnnq2sOZkYFs71LkwuatTnYVcunYifl2IBN/YjKvWDT4NEm7BNIunCDJMg4MAPe8SesM5rut3TDkbEjmLcVItFyzv5ptS5Iovq/qQdQX4bCFh4EELuWY0JGgMuM/5S9TvWKQCj0tjpl0MgGYuuauNZVFA/0h48d8ncSiIDT09lFUYxgt2cEUnhpajacDA==}
     password: HOLIDAY{Ige2MnJ0iTCQnBJ2GtA/RzAhaLBOo/Ga6aw3a8r2FOzEJSRYtDGTt5eKPPzi2OTv0jzaehI8ovKR/VlOW1gbEnb3URgBVi9mRpxjSqufcrAmvpJsOERDgIS5tuE6j92T6AZWNzm1Q//pCtDCzwOD5Dm5Al9N9IYIafQ8QOXtLZanel4I/b+J8Q12Z7UdHAIAnVT/myMbHHQ9RMVfxV0VDJVLZfAFFG/axZukl/Q9H1yrPCMN/hz2STZIkQLHU+VFCGqBlOByk3JKytyExWpdy63+04s5BnqRyniFUpkS2VlFWcWTTkYQJZo9sedizV1Y6i4i1n+QGIncUYPQTv+kXA==}
     publisher-confirm-type: correlated

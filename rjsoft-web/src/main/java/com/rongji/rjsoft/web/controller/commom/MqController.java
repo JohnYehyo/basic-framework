@@ -1,9 +1,12 @@
 package com.rongji.rjsoft.web.controller.commom;
 
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
 import com.rongji.rjsoft.common.util.LogUtils;
 import com.rongji.rjsoft.enums.QueueEnum;
+import com.rongji.rjsoft.enums.ResponseEnum;
+import com.rongji.rjsoft.vo.ResponseVo;
 import com.rongji.rjsoft.web.component.RabbitMqSender;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,14 +38,15 @@ public class MqController {
 
     @ApiOperation(value = "发送消息")
     @PostMapping(value = "sendMessage")
-    public void sendMessage(String message) {
+    public ResponseVo sendMessage(String message) {
         amqpTemplate.convertAndSend(QueueEnum.QUEUE_ORDER_CANCEL.getExchange(), QueueEnum.QUEUE_ORDER_CANCEL.getRouteKey(), message);
         LogUtils.info("发送消息:{}", message);
+        return ResponseVo.success();
     }
 
     @ApiOperation(value = "发送延迟消息")
     @PostMapping(value = "sendTtlMessage")
-    public void sendTtlMessage(Long orderId, final long delayTimes) {
+    public ResponseVo sendTtlMessage(Long orderId, final long delayTimes) {
         amqpTemplate.convertAndSend(QueueEnum.QUEUE_TTL_ORDER_CANCEL.getExchange(), QueueEnum.QUEUE_TTL_ORDER_CANCEL.getRouteKey(), orderId, new MessagePostProcessor() {
             @Override
             public Message postProcessMessage(Message message) throws AmqpException {
@@ -51,11 +55,12 @@ public class MqController {
             }
         });
         LogUtils.info("发送消息:{}", orderId);
+        return ResponseVo.success();
     }
 
     @ApiOperation(value = "发送带有回复的消息")
     @PostMapping(value = "sendAckMessage")
-    public void sendAckMessage(@RequestParam Object message) {
+    public ResponseVo sendAckMessage(@RequestParam Object message) {
 
         rabbitMqSender.submitConfirm("test-ex",
                 "test-key",
@@ -66,11 +71,13 @@ public class MqController {
                 "test-key222",
                 JSON.toJSONString(message),
                 UUID.fastUUID().toString());
+
+        return ResponseVo.success();
     }
 
     @ApiOperation(value = "多个队列且队列并发控制")
     @PostMapping(value = "sendMessageByLimitReceive")
-    public void sendMessageByLimitReceive(@RequestParam Object message) {
+    public ResponseVo sendMessageByLimitReceive(@RequestParam Object message) {
 
         for (int i = 0; i < 15; i++) {
             rabbitMqSender.submitConfirm("test-ex",
@@ -78,11 +85,12 @@ public class MqController {
                     String.valueOf(i),
                     UUID.fastUUID().toString());
         }
+        return ResponseVo.success();
     }
 
     @ApiOperation(value = "通配符接收消息")
     @PostMapping(value = "sendMessageByTopicReceive")
-    public void sendMessageByTopicReceive(@RequestParam Object message) {
+    public ResponseVo sendMessageByTopicReceive(@RequestParam Object message) {
 
         //通配符ak.#接收
         for (int i = 0; i < 5; i++) {
@@ -99,11 +107,12 @@ public class MqController {
                     "am:" + i,
                     UUID.fastUUID().toString());
         }
+        return ResponseVo.success();
     }
 
     @ApiOperation(value = "多个队列同时接收消息")
     @PostMapping(value = "sendMessageByAllReceive")
-    public void sendMessageByAllReceive(@RequestParam Object message) {
+    public ResponseVo sendMessageByAllReceive(@RequestParam Object message) {
 
         for (int i = 0; i < 5; i++) {
             rabbitMqSender.submitConfirm("am-fanout-ex",
@@ -111,5 +120,6 @@ public class MqController {
                     String.valueOf(i),
                     UUID.fastUUID().toString());
         }
+        return ResponseVo.success();
     }
 }
