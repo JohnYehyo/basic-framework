@@ -26,7 +26,9 @@ public class RabbitMqReceiver4 {
 
 
     /**
-     *
+     * 交换器类型设置为topic, 绑定各自不同的队列,
+     * 路由键使用"#"(匹配一个或多个词)或"*"(匹配一个词)
+     * 可以使用topic的通配符模式
      * @param body
      * @param headers
      * @param channel
