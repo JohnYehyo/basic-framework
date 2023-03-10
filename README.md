@@ -160,3 +160,14 @@ concurrent的值和prefetchCount可以在Rabbitmq的控制台看到:
 
 在MqController中分别列出了发送消息 、发送延迟消息、发送带有回复的消息、多个队列且队列并发控制、通配符接收消息、通配符接收消息、多个队列同时接收消息集中模式
 
+> 队列连环发送
+> 收到消息后发到另一个队列可以使用@sendto("其它队列")
+```java
+@RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = "johnyehyo.test.queue", durable = "true"),
+            exchange = @Exchange(value = "johnyehyo.test.exchange", durable = "true", type = ExchangeTypes.DIRECT),
+            key = "johnyehyo.test.key"
+    ), concurrency = "10")
+@SendTo("其它队列")
+```
+

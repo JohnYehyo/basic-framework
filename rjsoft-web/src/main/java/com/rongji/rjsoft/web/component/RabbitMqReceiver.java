@@ -2,6 +2,7 @@ package com.rongji.rjsoft.web.component;
 
 import com.rabbitmq.client.Channel;
 import com.rongji.rjsoft.common.util.LogUtils;
+import com.rongji.rjsoft.enums.QueueEnum;
 import com.rongji.rjsoft.enums.RabbitResult;
 import org.springframework.amqp.core.ExchangeTypes;
 import org.springframework.amqp.rabbit.annotation.*;
@@ -11,6 +12,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 /**
@@ -22,12 +24,12 @@ import java.util.Map;
 public class RabbitMqReceiver {
 
 
-//    @RabbitListener(bindings = @QueueBinding(
-//            value = @Queue(value = "test-key", durable = "true"),
-//            exchange = @Exchange(value = "test-ex", durable = "true", type = ExchangeTypes.DIRECT),
-//            key = "test-key"
-//    ), concurrency = "10")
-//    @RabbitListener(queues = "test-key", concurrency = "1")
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = "johnyehyo.test.queue", durable = "true"),
+            exchange = @Exchange(value = "johnyehyo.test.exchange", durable = "true", type = ExchangeTypes.DIRECT),
+            key = "johnyehyo.test.key"
+    ), concurrency = "10")
+//    @RabbitListener(queues = "johnyehyo.test.queue ", concurrency = "1")
     public void onMessage(@Payload String body, @Headers Map<String, Object> headers, Channel channel) throws IOException {
         Long tag = (Long) headers.get(AmqpHeaders.DELIVERY_TAG);
         String correlationId = (String) headers.get("spring_returned_message_correlation");
@@ -39,20 +41,14 @@ public class RabbitMqReceiver {
         boolean global = false;
         channel.basicQos(prefecthSize, prefetchCount, global);
 
-        try {
-            Thread.sleep(5000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         RabbitResult rr = RabbitResult.RETRY;
         try {
             //具体业务处理...
-            LogUtils.info("[统一消息][接收端]消费消息:{}, 内容:{}", correlationId, body);
+            LogUtils.info("[统一消息][接收端]消费消息:{}, 内容:{}, 时间:{}", correlationId, body, LocalDateTime.now());
             rr = RabbitResult.SUCCESS;
         } catch (Exception e) {
             rr = RabbitResult.DISCARDED;
-            LogUtils.error("[统一消息][接收端]消息{}, 业务逻辑处理错误", correlationId, e);
+            LogUtils.error("[统一消息][接收端]消息:{}, 业务逻辑处理错误", correlationId, e);
         } finally {
             if (rr == RabbitResult.SUCCESS) {
                 //告诉服务器收到这条消息 无需再发了 否则消息服务器以为这条消息没处理掉 后续还会在发

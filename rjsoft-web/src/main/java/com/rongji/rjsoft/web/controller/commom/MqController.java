@@ -20,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
+import static com.rongji.rjsoft.enums.QueueEnum.QUEUE_TTL_ORDER_CANCEL;
+
 /**
  * @description:
  * @author: JohnYehyo
@@ -46,15 +50,17 @@ public class MqController {
 
     @ApiOperation(value = "发送延迟消息")
     @PostMapping(value = "sendTtlMessage")
-    public ResponseVo sendTtlMessage(Long orderId, final long delayTimes) {
-        amqpTemplate.convertAndSend(QueueEnum.QUEUE_TTL_ORDER_CANCEL.getExchange(), QueueEnum.QUEUE_TTL_ORDER_CANCEL.getRouteKey(), orderId, new MessagePostProcessor() {
-            @Override
-            public Message postProcessMessage(Message message) throws AmqpException {
-                message.getMessageProperties().setExpiration(String.valueOf(delayTimes));
-                return message;
-            }
-        });
-        LogUtils.info("发送消息:{}", orderId);
+    public ResponseVo sendTtlMessage(@RequestParam Object message, @RequestParam final long delayTimes) {
+//        amqpTemplate.convertAndSend(QueueEnum.QUEUE_TTL_ORDER_CANCEL.getExchange(), QueueEnum.QUEUE_TTL_ORDER_CANCEL.getRouteKey(), message, new MessagePostProcessor() {
+//            @Override
+//            public Message postProcessMessage(Message message) throws AmqpException {
+//                LogUtils.info("发送延迟消息:{}, 时间:{}", message, LocalDateTime.now());
+//                message.getMessageProperties().setExpiration(String.valueOf(delayTimes));
+//                return message;
+//            }
+//        });
+        rabbitMqSender.submitDelay("johnyehyo.test.ttl.exchange", "johnyehyo.test.ttl.key", message,
+                UUID.fastUUID().toString(), delayTimes);
         return ResponseVo.success();
     }
 
