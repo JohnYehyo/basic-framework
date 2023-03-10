@@ -54,7 +54,7 @@ public class RabbitMqReceiver2 {
             rr = RabbitResult.SUCCESS;
         } catch (Exception e) {
             rr = RabbitResult.DISCARDED;
-            LogUtils.error("[统一消息][接收端2]消息{}, 业务逻辑处理错误", correlationId, e);
+            LogUtils.error("[统一消息][接收端2]消息:{}, 业务逻辑处理错误", correlationId, e);
         } finally {
             if (rr == RabbitResult.SUCCESS) {
                 channel.basicAck(tag, false);

@@ -52,7 +52,7 @@ public class RabbitMqReceiver3 {
             rr = RabbitResult.SUCCESS;
         } catch (Exception e) {
             rr = RabbitResult.DISCARDED;
-            LogUtils.error("[统一消息][接收端3]消息{}, 业务逻辑处理错误", correlationId, e);
+            LogUtils.error("[统一消息][接收端3]消息:{}, 业务逻辑处理错误", correlationId, e);
         } finally {
             if (rr == RabbitResult.SUCCESS) {
                 //告诉服务器收到这条消息 无需再发了 否则消息服务器以为这条消息没处理掉 后续还会在发
