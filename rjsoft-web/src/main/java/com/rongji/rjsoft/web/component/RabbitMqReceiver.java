@@ -5,6 +5,7 @@ import com.rongji.rjsoft.common.util.LogUtils;
 import com.rongji.rjsoft.enums.QueueEnum;
 import com.rongji.rjsoft.enums.RabbitResult;
 import org.springframework.amqp.core.ExchangeTypes;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.*;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.messaging.handler.annotation.Headers;
@@ -30,7 +31,7 @@ public class RabbitMqReceiver {
             key = "johnyehyo.test.key"
     ), concurrency = "10")
 //    @RabbitListener(queues = "johnyehyo.test.queue ", concurrency = "1")
-    public void onMessage(@Payload String body, @Headers Map<String, Object> headers, Channel channel) throws IOException {
+    public void onMessage(@Payload String body, @Headers Map<String, Object> headers, Channel channel, Object message) throws IOException {
         Long tag = (Long) headers.get(AmqpHeaders.DELIVERY_TAG);
         String correlationId = (String) headers.get("spring_returned_message_correlation");
         // 单条消息的大小限制，一般设为0或不设置，不限制大小
@@ -44,7 +45,7 @@ public class RabbitMqReceiver {
         RabbitResult rr = RabbitResult.RETRY;
         try {
             //具体业务处理...
-            LogUtils.info("[统一消息][接收端]消费消息:{}, 内容:{}, 时间:{}", correlationId, body, LocalDateTime.now());
+            LogUtils.info("[统一消息][接收端]消费消息:{}, 内容:{}, 时间:{}", correlationId, message, LocalDateTime.now());
             rr = RabbitResult.SUCCESS;
         } catch (Exception e) {
             rr = RabbitResult.DISCARDED;

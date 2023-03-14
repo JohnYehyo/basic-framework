@@ -36,11 +36,11 @@ public class CancelOrderReceiver {
         RabbitResult rr = RabbitResult.RETRY;
         try {
             //具体业务处理...
-            LogUtils.info("[统一消息][接收端]消费消息, 内容:{}, 时间:{}", message, LocalDateTime.now());
+            LogUtils.info("消费延迟消息, 内容:{}, 时间:{}", message, LocalDateTime.now());
             rr = RabbitResult.SUCCESS;
         } catch (Exception e) {
             rr = RabbitResult.DISCARDED;
-            LogUtils.error("[统一消息][接收端]消息, 业务逻辑处理错误", e);
+            LogUtils.error("消费延迟消息, 业务逻辑处理错误", e);
         } finally {
             if (rr == RabbitResult.SUCCESS) {
                 //告诉服务器收到这条消息 无需再发了 否则消息服务器以为这条消息没处理掉 后续还会在发

@@ -65,8 +65,8 @@ public class RabbitMqSender {
         //todo 记录消息发送
         LogUtils.info("[统一消息]接收到待投递延迟消息:{}, 消息内容略去, 时间:{}", baseID, LocalDateTime.now());
         try {
-//            rabbitTemplate.setMandatory(true);
-//            rabbitTemplate.setReturnsCallback(allMsgReturnsCallback);
+            rabbitTemplate.setMandatory(true);
+            rabbitTemplate.setReturnsCallback(allMsgReturnsCallback);
 //            rabbitTemplate.setConfirmCallback(allMsgCofirmCallback);
             rabbitTemplate.convertAndSend(exchange, routingKey, obj, message -> {
                 message.getMessageProperties().setExpiration(String.valueOf(delayTimes));
