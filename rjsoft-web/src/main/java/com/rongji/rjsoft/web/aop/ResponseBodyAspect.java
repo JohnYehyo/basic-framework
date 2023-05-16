@@ -74,6 +74,9 @@ public class ResponseBodyAspect {
 
     private void printRequestParam(String controllerName, String methodName, Object[] args) {
         List<Object> argList = new ArrayList<>();
+        if(null != args && args.length == 1 && args[0] instanceof Exception){
+            return;
+        }
         for (Object arg : args) {
             if (arg instanceof MultipartFile
                     || arg instanceof MultipartFile[]
