@@ -3,7 +3,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://218.28.133.52:7111/rjcloud_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://182.119.231.220:7111/rjcloud_db?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: HOLIDAY{GWeo7RCM+57lLPcq+xH5GKt3u50bjRVv4YnuiB8OvRkSuYtLwko6fhgv8t6yQ1vrV2tHwJUhTUciaQeh69otMVVyrnQOoKdjq+Gw05GSq8F0sYrotkrL0SYFV/0DLScCtf077ApcvsexaI3sH/0TLhANx/xdx2WqhsLAxzqRev6nxDmf42vX3/sKCRzfjhMvoBJTRWOJ/LVtDnTta12jeZd0w6aX+Ue7cI/iQwHxHt4YeXxqHZiX9YEmESjkywfQLcF0VLFH0o214MmiUEAAyKk4BkoES6gj7eLRwK6PYFxxShr6eaYat6ejU8ZfaalXQOnTMEYRq3kg55OMHsR3Ow==}
     password: HOLIDAY{C/tLBv8CxJPGH7Q6QpSczFoHWbZn3f1uhQ7M83YscqG9wClREUJyA/qnr1BiLlBurjx95L7VsgSc8nRaLeYyy5yEnK6I/IrNEgYqYL511HWa8zdEY4jD/btWNAvp43VuSfPcAKfvnEbUhvc0ft+O8AmDANosOS2VuUqjDq6FKFHa+kXyEp5WqQrEEOzYkg8s7OynDjRIz9ZEjlykxNqx5DhViS4k3xGwH77cJ37quqWzBxc1J9r7vCTH1f45m8tc8n1IKEZfJULDpvB+/riqPdWl0l+p6uVdvY1oU3Ezyyb5yzJ/mWZBcXdr2r4LorUGTIES/hMIavz9MERqNtVq4A==}
     druid:
@@ -49,7 +49,7 @@ spring:
             multi-statement-allow: true
   #redis
   redis:
-    host: 218.28.133.52
+    host: 182.119.231.220
     #    password: 123456
     port: 7113
     timeout: 5000
@@ -66,7 +66,7 @@ spring:
       max-request-size: 50MB
   #rabbitmq
   rabbitmq:
-    host: 218.28.133.52
+    host: 182.119.231.220
     port: 9976
     virtual-host: /
     username: HOLIDAY{LUm/LnezDowQ2rNFG9d+QLH9NVFe2K2HnQ7xNTJlNFqfT4oWzxgsqVQTi0MU42CsJZ6ND8oXFVyHFypRVWpx0rngGc6aLa2pRk1uH1d0q4zQri9WY2kTKeJIhYQDW7COsNgbTI8ECYe8EV1MTMDUCdt0iOnnq2sOZkYFs71LkwuatTnYVcunYifl2IBN/YjKvWDT4NEm7BNIunCDJMg4MAPe8SesM5rut3TDkbEjmLcVItFyzv5ptS5Iovq/qQdQX4bCFh4EELuWY0JGgMuM/5S9TvWKQCj0tjpl0MgGYuuauNZVFA/0h48d8ncSiIDT09lFUYxgt2cEUnhpajacDA==}
@@ -106,9 +106,9 @@ file:
 swagger:
   enable: true
 
-mybatis-plus:
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 xxl:
   job:
