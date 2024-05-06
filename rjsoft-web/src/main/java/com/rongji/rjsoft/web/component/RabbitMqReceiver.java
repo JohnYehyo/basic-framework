@@ -31,9 +31,11 @@ public class RabbitMqReceiver {
             key = "johnyehyo.test.key"
     ), concurrency = "10")
 //    @RabbitListener(queues = "johnyehyo.test.queue ", concurrency = "1")
-    public void onMessage(@Payload String body, @Headers Map<String, Object> headers, Channel channel, Object message) throws IOException {
+    public void onMessage(@Payload String body, @Headers Map<String, Object> headers, Channel channel, Object message, Message msg) throws IOException {
         Long tag = (Long) headers.get(AmqpHeaders.DELIVERY_TAG);
         String correlationId = (String) headers.get("spring_returned_message_correlation");
+        // 如果延迟队列使用下面的方法获取设置的跟踪标识, 原因参考延迟队列发送端的tips
+        String cid = (String) msg.getMessageProperties().getHeaders().get("correlationId");
         // 单条消息的大小限制，一般设为0或不设置，不限制大小
         int prefecthSize = 0;
         // 不要同时给消费端推送n条消息，一旦有n个消息还没ack，则该consumer将block掉，直到有ack 注意在自动应答下不生效
