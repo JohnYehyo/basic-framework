@@ -42,15 +42,15 @@ public class NotificationSystemApplicationRunner implements ApplicationRunner {
         Receiver receiver = new Receiver(receiptQueue);
 
         //无返回值的异步任务
-        for (int i = 0; i < threadPoolTaskExecutor.getCorePoolSize(); i++) {
+        for (int i = 0; i < threadPoolTaskExecutor.getMaxPoolSize(); i++) {
             CompletableFuture.runAsync(() -> {
                 LogUtils.info(RandomUtil.randomString(10));
             }, threadPoolTaskExecutor);
         }
 
         //有返回值的异步任务
-        List<CompletableFuture<String>> list = new ArrayList<>(threadPoolTaskExecutor.getCorePoolSize());
-        for (int i = 0; i < threadPoolTaskExecutor.getCorePoolSize(); i++) {
+        List<CompletableFuture<String>> list = new ArrayList<>(threadPoolTaskExecutor.getMaxPoolSize());
+        for (int i = 0; i < threadPoolTaskExecutor.getMaxPoolSize(); i++) {
             list.add(CompletableFuture.supplyAsync(() ->
                             RandomUtil.randomString(10)
                     , threadPoolTaskExecutor));

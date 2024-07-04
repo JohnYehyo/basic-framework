@@ -14,7 +14,7 @@ import javax.annotation.PreDestroy;
  * @create: 2023-07-25 09:28:40
  */
 @Configuration
-public class ThreadPoolConfig implements DisposableBean {
+public class ThreadPoolConfig {
 
     /**
      * 核心线程池大小
@@ -53,18 +53,9 @@ public class ThreadPoolConfig implements DisposableBean {
     @PreDestroy
     public void preDestroy() {
         if (null != executor) {
-            System.out.println(executor.getActiveCount());
             System.out.println("关闭线程池...");
             executor.shutdown();
         }
     }
 
-    @Override
-    public void destroy() throws Exception {
-        if (null != executor) {
-            System.out.println(executor.getActiveCount());
-            System.out.println("关闭线程池...........");
-            executor.shutdown();
-        }
-    }
 }
