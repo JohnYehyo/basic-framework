@@ -19,4 +19,9 @@ public class MyRejectedExecutionHandler implements RejectedExecutionHandler {
         LogUtils.info("线程拒绝策略执行, 线程->{}<-被丢弃", r.toString());
         throw new BusinessException(ResponseEnum.BUSY);
     }
+
+    public static void main(String[] args) {
+        String abc = "0/";
+        System.out.println(abc.replace("/", ","));
+    }
 }

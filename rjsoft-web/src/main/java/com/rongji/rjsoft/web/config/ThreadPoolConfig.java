@@ -1,11 +1,12 @@
 package com.rongji.rjsoft.web.config;
 
 import com.rongji.rjsoft.web.handler.MyRejectedExecutionHandler;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.concurrent.ThreadPoolExecutor;
+import javax.annotation.PreDestroy;
 
 /**
  * @description: 线程池配置
@@ -13,7 +14,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @create: 2023-07-25 09:28:40
  */
 @Configuration
-public class ThreadPoolConfig {
+public class ThreadPoolConfig implements DisposableBean {
 
     /**
      * 核心线程池大小
@@ -35,14 +36,35 @@ public class ThreadPoolConfig {
      */
     private int keepAliveSeconds = 60;
 
+    private ThreadPoolTaskExecutor executor;
+
     @Bean(name = "threadPoolTaskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor = new ThreadPoolTaskExecutor();
         executor.setMaxPoolSize(maxPoolSize);
         executor.setCorePoolSize(corePoolSize);
         executor.setQueueCapacity(queueCapacity);
         executor.setKeepAliveSeconds(keepAliveSeconds);
         executor.setRejectedExecutionHandler(new MyRejectedExecutionHandler());
+        executor.setThreadNamePrefix("JohnYehyo-pool-thread-");
         return executor;
+    }
+
+    @PreDestroy
+    public void preDestroy() {
+        if (null != executor) {
+            System.out.println(executor.getActiveCount());
+            System.out.println("关闭线程池...");
+            executor.shutdown();
+        }
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        if (null != executor) {
+            System.out.println(executor.getActiveCount());
+            System.out.println("关闭线程池...........");
+            executor.shutdown();
+        }
     }
 }
