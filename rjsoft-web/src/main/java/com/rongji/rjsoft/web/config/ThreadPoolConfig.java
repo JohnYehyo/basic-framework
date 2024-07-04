@@ -1,7 +1,6 @@
 package com.rongji.rjsoft.web.config;
 
 import com.rongji.rjsoft.web.handler.MyRejectedExecutionHandler;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
