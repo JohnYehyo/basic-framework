@@ -57,6 +57,14 @@ public class NotificationSystemApplicationRunner implements ApplicationRunner {
             每个future一完成时就立即加入到collect2中，无论完成是否成功。然而，由于这些操作是异步的，
             并且外部循环在等待之前的任务完成之前就继续提交新的任务，如果主线程在所有future都有机会将
             它们的结果加入到collect2之前就完成了它的执行，那么collect2可能会收到少于100个条目
+            1. 线程池资源耗尽：
+               当线程池的核心线程数较小，且 CompletableFuture 提交的新任务超出线程池处理能力时，
+               部分任务可能被阻塞或延迟，导致某些任务未能及时提交执行或成功完成。因此，增大核心线程
+               数确实有助于缓解这种情况。
+
+            2. 外部循环的并发性：
+               由于主线程不断提交新任务并可能在 CompletableFuture 的任务还未完全完成前就结束整个程序，
+               导致一些任务来不及执行和加入 collect2，尤其是在没有进行适当的同步和等待的情况下。
          */
 
         //有返回值的异步任务
